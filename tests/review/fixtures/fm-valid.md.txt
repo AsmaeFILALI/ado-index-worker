@@ -1,0 +1,13 @@
+---
+title: Valid Title
+category: policy
+owner: sec-team
+review_by: 2027-01-01
+classification: internal
+---
+
+# Heading Title
+
+## Section
+
+Body.

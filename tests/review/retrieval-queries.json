@@ -1,0 +1,90 @@
+{
+  "evidence": "proposed-not-run",
+  "note": "Queries for the separately approved retrieval evaluation (review Step 6). They reference review fixtures; load the fixtures into a NON-serving index first. Report recall@5 and recall@10 of expected_heading_path in the returned sections. Nothing here has been run against Azure.",
+  "cases": [
+    {
+      "id": "near-duplicate-latest-wins",
+      "kind": "near-duplicate",
+      "language": "en",
+      "question": "How many days do we have to fix a critical vulnerability?",
+      "expected_fixture": "near-duplicate-new",
+      "expected_heading_path": "Vulnerability Handling (2024) > Deadlines",
+      "must_rank_above": ["near-duplicate-old"],
+      "expected_text": "14 days"
+    },
+    {
+      "id": "table-row",
+      "kind": "table-row",
+      "language": "en",
+      "question": "What is in the third column of the row cell-7-0?",
+      "expected_fixture": "table-oversize",
+      "expected_heading_path": "T > S",
+      "expected_text": "cell-7-2"
+    },
+    {
+      "id": "code-block",
+      "kind": "code-block",
+      "language": "en",
+      "question": "What does value_250 get assigned?",
+      "expected_fixture": "code-oversize",
+      "expected_heading_path": "T > S",
+      "expected_text": "value_250 = compute(250)"
+    },
+    {
+      "id": "nested-list",
+      "kind": "nested-list",
+      "language": "en",
+      "question": "What is the deepest item under sub a?",
+      "expected_fixture": "list-nested-mixed",
+      "expected_heading_path": "T > S",
+      "expected_text": "deeper"
+    },
+    {
+      "id": "preamble",
+      "kind": "preamble",
+      "language": "en",
+      "question": "What does the text before the first heading say?",
+      "expected_fixture": "h-preamble",
+      "expected_heading_path": "",
+      "expected_text": "Preamble text before any heading."
+    },
+    {
+      "id": "part-split",
+      "kind": "part-split",
+      "language": "en",
+      "question": "What does sentence 131 of the synthetic escalation rule say?",
+      "expected_fixture": "prose-oversize-one-section",
+      "expected_heading_path": "T > S",
+      "expected_parts": [4, 5],
+      "expected_text": "Sentence 131 explains"
+    },
+    {
+      "id": "html-details",
+      "kind": "html",
+      "language": "en",
+      "question": "What is the hidden answer?",
+      "expected_fixture": "html-details",
+      "expected_heading_path": "T > S",
+      "expected_text": "42"
+    },
+    {
+      "id": "fr-same-structure",
+      "kind": "bilingual",
+      "language": "fr",
+      "question": "Dans quel delai faut-il corriger une vulnerabilite critique?",
+      "expected_fixture": "bilingual-fr",
+      "expected_heading_path": "Politique de correctifs > Délais",
+      "expected_text": "14 jours"
+    },
+    {
+      "id": "en-for-fr-doc",
+      "kind": "bilingual",
+      "language": "en",
+      "question": "Within how many days must critical vulnerabilities be fixed?",
+      "expected_fixture": "bilingual-fr",
+      "alternate_expected_fixture": "bilingual-en",
+      "expected_heading_path": "Politique de correctifs > Délais",
+      "expected_text": "14"
+    }
+  ]
+}

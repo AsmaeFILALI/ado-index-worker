@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling==1.32.4"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ado-markdown-ingestion"
+version = "0.2.0"
+description = "Deterministic Azure DevOps Markdown ingestion and scoped publication"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "azure-core>=1.34,<2",
+  "azure-identity>=1.23,<2",
+  "azure-search-documents>=11.6,<12",
+  "azure-storage-blob>=12.25,<13",
+  "httpx>=0.28,<1",
+  "markdown-it-py>=3.0,<5",
+  "openai>=1.75,<3",
+  "tiktoken>=0.9,<1",
+]
+
+[project.scripts]
+ado-ingest = "ado_markdown_ingestion.cli:main"
+
+[dependency-groups]
+dev = [
+  "mypy>=1.15,<2",
+  "pytest>=8,<10",
+  "pyyaml>=6,<7",
+  "ruff>=0.11,<1",
+  "types-PyYAML>=6,<7",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ado_markdown_ingestion"]
+
+[tool.hatch.build]
+exclude = ["**/__pycache__/**", "**/*.pyc"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/**", "tests/**", "docs/**", "examples/**", "pipelines/**", "scripts/**",
+  "README.md", "CONTRIBUTING.md", "CHANGELOG.md", "SECURITY.md", "pyproject.toml", "uv.lock", ".python-version",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = [".cache", ".tools", ".venv-linux"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+tmp_path_retention_policy = "failed"

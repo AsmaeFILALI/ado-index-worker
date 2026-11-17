@@ -1,0 +1,10 @@
+# T
+
+## Real
+
+```md
+## Fake heading in fence
+# Another
+```
+
+After.

@@ -1,0 +1,11 @@
+# T
+
+## S
+
+See [policy][pol].
+
+## Other
+
+Text.
+
+[pol]: https://example.invalid/p

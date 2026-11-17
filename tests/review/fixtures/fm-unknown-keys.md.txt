@@ -1,0 +1,13 @@
+---
+title: T
+source_system: onenote
+source_id: 42
+source_url: https://x.example/1
+weird: yes
+---
+
+# Heading
+
+## S
+
+Body.

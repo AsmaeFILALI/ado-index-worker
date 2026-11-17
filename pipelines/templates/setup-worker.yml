@@ -1,0 +1,59 @@
+parameters:
+  - name: workerRoot
+    type: string
+  # download: hosted agents install from the package index (default).
+  # local: a self-hosted agent without package-index access builds from the wheel directory
+  # named by the agent's INGEST_WHEEL_DIR environment variable; Python 3.12 and uv must be installed.
+  - name: toolchain
+    type: string
+    default: download
+    values: [download, local]
+
+steps:
+  - ${{ if eq(parameters.toolchain, 'download') }}:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.12'
+          architecture: x64
+      - pwsh: |
+          $ErrorActionPreference = 'Stop'
+          python -m pip install --disable-pip-version-check uv==0.7.19
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          uv sync --locked --python 3.12 --group dev
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $cache = Join-Path $env:INGEST_WORKER_ROOT '.cache/tiktoken'
+          uv run --locked ado-ingest prepare-tokenizer --cache-dir $cache
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        displayName: Prepare pinned toolchain and verified tokenizer dependency
+        workingDirectory: ${{ parameters.workerRoot }}
+        env:
+          INGEST_WORKER_ROOT: ${{ parameters.workerRoot }}
+          UV_PYTHON_DOWNLOADS: never
+  - ${{ if eq(parameters.toolchain, 'local') }}:
+      - pwsh: |
+          $ErrorActionPreference = 'Stop'
+          if (-not $env:INGEST_WHEEL_DIR -or -not (Test-Path -LiteralPath $env:INGEST_WHEEL_DIR -PathType Container)) {
+            throw 'The self-hosted agent must define INGEST_WHEEL_DIR as an existing wheel directory.'
+          }
+          $requirements = Join-Path $env:AGENT_TEMPDIRECTORY 'ingest-requirements.txt'
+          uv venv --python 3.12 .venv
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          uv export --locked --offline --no-emit-project --group dev --format requirements-txt --no-header -o $requirements
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          uv pip sync --python .venv --no-index --find-links $env:INGEST_WHEEL_DIR --require-hashes $requirements
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          # The build backend is not in the lock; install the exact version pinned by pyproject.toml.
+          uv pip install --python .venv --no-index --find-links $env:INGEST_WHEEL_DIR hatchling==1.32.4
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          uv pip install --python .venv --no-index --find-links $env:INGEST_WHEEL_DIR --no-deps --no-build-isolation .
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Remove-Item -LiteralPath $requirements -ErrorAction SilentlyContinue
+          $cache = Join-Path $env:INGEST_WORKER_ROOT '.cache/tiktoken'
+          uv run --locked --offline ado-ingest prepare-tokenizer --cache-dir $cache
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        displayName: Prepare toolchain from the agent's local wheel directory
+        workingDirectory: ${{ parameters.workerRoot }}
+        env:
+          INGEST_WORKER_ROOT: ${{ parameters.workerRoot }}
+          UV_PYTHON_DOWNLOADS: never
+          UV_NO_SYNC: '1'

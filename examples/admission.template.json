@@ -1,0 +1,22 @@
+{
+  "policy_version": 1,
+  "approval_reference": "<OWNER_REVIEW_REFERENCE_NOT_AN_APPROVAL>",
+  "approved_audience_reference": "<OWNER_APPROVED_UNIFORM_AUDIENCE_REFERENCE>",
+  "access_mode": "uniform-approved-corpus",
+  "repo_id": "<IMMUTABLE_REPOSITORY_ID>",
+  "source_ref": "<APPROVED_FULL_REF>",
+  "approved_commit": "<APPROVED_IMMUTABLE_COMMIT>",
+  "selection_fingerprint": "<FROM_REVIEWED_OFFLINE_PLAN_INVENTORY>",
+  "target": {
+    "search_endpoint": "https://<SEARCH_SERVICE>.search.windows.net",
+    "index_name": "<EXISTING_PHYSICAL_INDEX>",
+    "embedding_endpoint": "https://<OPENAI_RESOURCE>.openai.azure.com",
+    "state_account_url": "https://<STORAGE_ACCOUNT>.blob.core.windows.net",
+    "state_container": "<EXISTING_PRIVATE_CONTAINER>"
+  },
+  "target_role": "<SERVING_OR_NON_SERVING>",
+  "allow_bootstrap": false,
+  "allow_bootstrap_existing": false,
+  "allow_history_reset": false,
+  "allow_selection_reset": false
+}

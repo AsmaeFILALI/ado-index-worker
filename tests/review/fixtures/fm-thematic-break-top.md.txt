@@ -1,0 +1,13 @@
+---
+
+Intro paragraph after a thematic break.
+
+# Heading
+
+## S
+
+Body.
+
+---
+
+Tail.

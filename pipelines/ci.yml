@@ -1,0 +1,49 @@
+# Azure Repos PR runs require a build-validation branch policy for this pipeline.
+trigger:
+  branches:
+    include:
+      - main
+pr: none
+
+jobs:
+  - job: OfflineValidation
+    displayName: Python 3.12 offline checks
+    strategy:
+      matrix:
+        Linux:
+          imageName: ubuntu-latest
+        Windows:
+          imageName: windows-latest
+    pool:
+      vmImage: $(imageName)
+    steps:
+      - checkout: self
+        fetchDepth: 0
+        persistCredentials: false
+      - template: templates/setup-worker.yml
+        parameters:
+          workerRoot: $(Build.SourcesDirectory)
+      - pwsh: |
+          $ErrorActionPreference = 'Stop'
+          uv run --locked --offline ruff check .
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          uv run --locked --offline ruff format --check .
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          uv run --locked --offline mypy src tests
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $results = Join-Path $env:AGENT_TEMPDIRECTORY 'ado-ingest-unit.xml'
+          uv run --locked --offline pytest -q --junitxml $results
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          uv build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        displayName: Lint, type-check, offline tests and build
+        workingDirectory: $(Build.SourcesDirectory)
+        env:
+          UV_PYTHON_DOWNLOADS: never
+      - task: PublishTestResults@2
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFormat: JUnit
+          testResultsFiles: $(Agent.TempDirectory)/ado-ingest-unit.xml
+          failTaskOnFailedTests: true
+          failTaskOnMissingResultsFile: true

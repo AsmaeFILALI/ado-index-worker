@@ -1,0 +1,15 @@
+# T
+
+## S
+
+- Item with code:
+
+  ```sh
+  run --flag
+  ```
+
+- Item with table:
+
+  | A | B |
+  | - | - |
+  | 1 | 2 |

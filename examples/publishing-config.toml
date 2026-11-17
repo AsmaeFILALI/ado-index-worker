@@ -1,0 +1,27 @@
+# This template is not live-operation approval. Fill only owner-approved inputs.
+search_endpoint = "https://<SEARCH_SERVICE>.search.windows.net"
+index_name = "<EXISTING_PHYSICAL_INDEX>"
+# Read-only schema REST version; use an owner-approved preview for preview schema properties.
+search_schema_api_version = "<PLATFORM_APPROVED_SEARCH_SCHEMA_API_VERSION>"
+embedding_endpoint = "https://<OPENAI_RESOURCE>.openai.azure.com"
+openai_api_version = "<APPROVED_DATE_BASED_API_VERSION>"
+state_account_url = "https://<STORAGE_ACCOUNT>.blob.core.windows.net"
+state_container = "<EXISTING_PRIVATE_CONTAINER>"
+
+platform_schema = "<LOCAL_PINNED_FULL_PLATFORM_SCHEMA_JSON>"
+schema_sha256 = "<INDEPENDENT_OWNER_SCHEMA_SHA256>"
+# In a pipeline, platform_schema may be a path inside the pinned worker repository
+# (for example config/<name>/...); a Secure File value overrides it when supplied.
+
+# Approval for the proof of concept: a NON-SERVING test index with synthetic content only. The waiver
+# records an owner decision (20+ characters, no placeholders) and makes no audience or access claim.
+# For a serving index or real content use an admission instead: see docs/operations.md section 4.
+admission_waiver = "POC"
+
+auth_mode = "pipeline"
+tenant_id = "<TENANT_UUID>"
+client_id = "<FEDERATED_CLIENT_ID>"
+service_connection_id = "<AUTHORIZED_SERVICE_CONNECTION_ID>"
+# SYSTEM_ACCESSTOKEN belongs only in the authorized job's environment.
+inventory_limit = 10000
+visibility_seconds = 120

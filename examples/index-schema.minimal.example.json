@@ -1,0 +1,274 @@
+{
+  "name": "<INDEX_NAME>",
+  "description": "Minimal index definition for ado-markdown-ingestion: the consumer contract fields plus category. Replace the placeholders, then create the index and pin this exact file.",
+  "fields": [
+    {
+      "name": "id",
+      "type": "Edm.String",
+      "key": true,
+      "searchable": true,
+      "retrievable": true,
+      "filterable": true,
+      "analyzer": "keyword"
+    },
+    {
+      "name": "parent_id",
+      "type": "Edm.String",
+      "searchable": false,
+      "retrievable": true,
+      "filterable": true
+    },
+    {
+      "name": "chunk_id",
+      "type": "Edm.Int32",
+      "searchable": false,
+      "retrievable": true
+    },
+    {
+      "name": "content",
+      "type": "Edm.String",
+      "searchable": true,
+      "retrievable": true,
+      "analyzer": "standard.lucene"
+    },
+    {
+      "name": "title",
+      "type": "Edm.String",
+      "searchable": true,
+      "retrievable": true,
+      "filterable": true,
+      "analyzer": "standard.lucene"
+    },
+    {
+      "name": "category",
+      "type": "Edm.String",
+      "searchable": true,
+      "retrievable": true,
+      "filterable": true,
+      "analyzer": "standard.lucene"
+    },
+    {
+      "name": "filepath",
+      "type": "Edm.String",
+      "searchable": true,
+      "retrievable": true,
+      "filterable": true,
+      "analyzer": "standard"
+    },
+    {
+      "name": "url",
+      "type": "Edm.String",
+      "searchable": false,
+      "retrievable": true
+    },
+    {
+      "name": "source",
+      "type": "Edm.String",
+      "searchable": false,
+      "retrievable": true,
+      "filterable": true
+    },
+    {
+      "name": "source_version_id",
+      "type": "Edm.String",
+      "searchable": false,
+      "retrievable": true,
+      "filterable": true
+    },
+    {
+      "name": "content_checksum_sha256",
+      "type": "Edm.String",
+      "searchable": false,
+      "retrievable": true,
+      "filterable": true
+    },
+    {
+      "name": "ingested_at",
+      "type": "Edm.DateTimeOffset",
+      "searchable": false,
+      "retrievable": true,
+      "filterable": true,
+      "sortable": true
+    },
+    {
+      "name": "ingest_run_id",
+      "type": "Edm.String",
+      "searchable": false,
+      "retrievable": true,
+      "filterable": true
+    },
+    {
+      "name": "repo_id",
+      "type": "Edm.String",
+      "key": false,
+      "searchable": false,
+      "filterable": true,
+      "sortable": false,
+      "facetable": false,
+      "retrievable": true
+    },
+    {
+      "name": "source_ref",
+      "type": "Edm.String",
+      "key": false,
+      "searchable": false,
+      "filterable": true,
+      "sortable": false,
+      "facetable": false,
+      "retrievable": true
+    },
+    {
+      "name": "source_path",
+      "type": "Edm.String",
+      "key": false,
+      "searchable": false,
+      "filterable": true,
+      "sortable": false,
+      "facetable": false,
+      "retrievable": true
+    },
+    {
+      "name": "heading_path",
+      "type": "Edm.String",
+      "key": false,
+      "searchable": true,
+      "filterable": false,
+      "sortable": false,
+      "facetable": false,
+      "retrievable": true,
+      "analyzer": "standard.lucene"
+    },
+    {
+      "name": "section_id",
+      "type": "Edm.String",
+      "key": false,
+      "searchable": false,
+      "filterable": true,
+      "sortable": false,
+      "facetable": false,
+      "retrievable": true
+    },
+    {
+      "name": "part",
+      "type": "Edm.Int32",
+      "key": false,
+      "searchable": false,
+      "filterable": false,
+      "sortable": false,
+      "facetable": false,
+      "retrievable": true
+    },
+    {
+      "name": "part_count",
+      "type": "Edm.Int32",
+      "key": false,
+      "searchable": false,
+      "filterable": false,
+      "sortable": false,
+      "facetable": false,
+      "retrievable": true
+    },
+    {
+      "name": "start_line",
+      "type": "Edm.Int32",
+      "key": false,
+      "searchable": false,
+      "filterable": false,
+      "sortable": false,
+      "facetable": false,
+      "retrievable": true
+    },
+    {
+      "name": "end_line",
+      "type": "Edm.Int32",
+      "key": false,
+      "searchable": false,
+      "filterable": false,
+      "sortable": false,
+      "facetable": false,
+      "retrievable": true
+    },
+    {
+      "name": "pipeline_version",
+      "type": "Edm.String",
+      "key": false,
+      "searchable": false,
+      "filterable": true,
+      "sortable": false,
+      "facetable": false,
+      "retrievable": true
+    },
+    {
+      "name": "contentVector",
+      "type": "Collection(Edm.Single)",
+      "searchable": true,
+      "retrievable": true,
+      "dimensions": 3072,
+      "vectorSearchProfile": "default"
+    }
+  ],
+  "corsOptions": {
+    "allowedOrigins": [
+      "*"
+    ],
+    "maxAgeInSeconds": 60
+  },
+  "vectorSearch": {
+    "profiles": [
+      {
+        "name": "default",
+        "algorithm": "hnsw",
+        "vectorizer": "azure_openai_vectorizer"
+      }
+    ],
+    "algorithms": [
+      {
+        "name": "hnsw",
+        "kind": "hnsw",
+        "hnswParameters": {
+          "m": 4,
+          "efConstruction": 400,
+          "efSearch": 500,
+          "metric": "cosine"
+        }
+      }
+    ],
+    "vectorizers": [
+      {
+        "name": "azure_openai_vectorizer",
+        "kind": "azureOpenAI",
+        "azureOpenAIParameters": {
+          "resourceUri": "https://<OPENAI_RESOURCE>.openai.azure.com",
+          "deploymentId": "text-embedding",
+          "modelName": "text-embedding-3-large"
+        }
+      }
+    ]
+  },
+  "semantic": {
+    "defaultConfiguration": "semantic-config",
+    "configurations": [
+      {
+        "name": "semantic-config",
+        "prioritizedFields": {
+          "titleField": {
+            "fieldName": "title"
+          },
+          "prioritizedContentFields": [
+            {
+              "fieldName": "content"
+            }
+          ],
+          "prioritizedKeywordsFields": [
+            {
+              "fieldName": "heading_path"
+            },
+            {
+              "fieldName": "category"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

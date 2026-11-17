@@ -1,0 +1,11 @@
+# T
+
+##
+
+Body under empty heading.
+
+## A
+## B
+## C
+
+Only C has body.

@@ -1,0 +1,12 @@
+# T
+
+## S
+
+Before.
+
+<!--
+## Hidden heading
+hidden editor text
+-->
+
+After.

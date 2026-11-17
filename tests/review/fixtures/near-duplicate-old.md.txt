@@ -1,0 +1,5 @@
+# Vulnerability Handling (2021)
+
+## Deadlines
+
+Critical vulnerabilities must be remediated within 30 days of disclosure.

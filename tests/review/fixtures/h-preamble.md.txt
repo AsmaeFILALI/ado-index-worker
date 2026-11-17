@@ -1,0 +1,7 @@
+Preamble text before any heading.
+
+# Title
+
+## Section
+
+Body.

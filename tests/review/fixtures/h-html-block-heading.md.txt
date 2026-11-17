@@ -1,0 +1,15 @@
+# T
+
+## Real
+
+<details>
+<summary>More</summary>
+## Not a section
+
+Inside.
+
+</details>
+
+<div>
+## Also not a section
+</div>

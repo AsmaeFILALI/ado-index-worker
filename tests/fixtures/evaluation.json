@@ -1,0 +1,43 @@
+{
+  "fixture_version": 1,
+  "evidence": "original-synthetic-expectations-not-retrieval-results",
+  "repo_id": "synthetic-evaluation",
+  "source_ref": "refs/heads/approved",
+  "source_path": "synthetic-guide.md",
+  "repo_url": "https://dev.azure.com/example-org/example-project/_git/synthetic-evaluation",
+  "markdown_fixture": "markdown/synthetic-guide.md",
+  "cases": [
+    {
+      "id": "prepare",
+      "question": "What should happen before reading the fictional gauge?",
+      "expected_heading_path": "Observatory Field Guide > Prepare the sample",
+      "expected_section_id": "e8778e367d5536251da51ce71b98eda38a8eb208d5efbf733536a5d574d646d8",
+      "expected_document_id": "84510e72412062a06d022f7d2b1a11faf500d31ea4314df1bf9ebdb3277a7828",
+      "expected_text": "Label the synthetic sample."
+    },
+    {
+      "id": "indicator",
+      "question": "What does the blue indicator mean?",
+      "expected_heading_path": "Observatory Field Guide > Read the gauge",
+      "expected_section_id": "b30363df54403642a4ac1d10eedd6624afbdcff39f95ea7dceb4dd6dc3650a8e",
+      "expected_document_id": "c059e8cee5dece5e6ab18a4ea982bf221e2385210b5c92d505437992ffd3e22f",
+      "expected_text": "Synthetic reading ready"
+    },
+    {
+      "id": "record",
+      "question": "What synthetic value should be recorded?",
+      "expected_heading_path": "Observatory Field Guide > Read the gauge > Record the result",
+      "expected_section_id": "fb532b3cb10626191dbd40238e36f07322919485d384e0f8832c85b881f7eefe",
+      "expected_document_id": "263aa3bb1389f4a373194c254ae88428cf5a2f7dc63e10db59b962696f6178d9",
+      "expected_text": "42 units"
+    },
+    {
+      "id": "repeated-heading",
+      "question": "What does the second Read the gauge section describe?",
+      "expected_heading_path": "Observatory Field Guide > Read the gauge",
+      "expected_section_id": "62b298970aba07a4c6dbd2c6fd60c744aa496791d620da179174bb26e01b0876",
+      "expected_document_id": "bf2a718f8d59968419612992ea7a9a7eb5eca9ab7f146978c5afaca483ecfb64",
+      "expected_text": "a separate, deterministic section"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# Reviewed config and pinned admissions are hashed byte-for-byte; keep LF on every platform.
+config/** text eol=lf
+# Adversarial review fixtures contain CRLF, lone CR, a BOM and invalid UTF-8 on purpose.
+tests/review/fixtures/** -text

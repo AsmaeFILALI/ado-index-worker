@@ -1,0 +1,14 @@
+# T
+
+<!-- hidden editor note: do not publish -->
+
+## S
+
+Visible <!-- inline note --> text.
+
+<!--
+multi-line
+comment with ## heading
+-->
+
+After.

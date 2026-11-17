@@ -1,0 +1,11 @@
+# T
+
+## S
+
+Claim with note[^1].
+
+## Other
+
+Body.
+
+[^1]: The footnote text lives at the end.

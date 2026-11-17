@@ -1,0 +1,58 @@
+# Local configuration, admission records and execution evidence
+.local/
+.secrets/
+.env
+.env.*
+!.env.example
+
+# Virtual environments and dependency/tokenizer caches
+.venv/
+.venv-linux/
+venv/
+env/
+.tools/
+.cache/
+
+# Python bytecode and packaging output
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Test, coverage and quality-tool output
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+junit*.xml
+test-results/
+*.log
+
+# Private keys, certificates and local tool credentials
+*.key
+*.pem
+*.pfx
+*.p12
+.azure/accessTokens.json
+.azure/msal_token_cache.*
+.azure/msal_http_cache.bin
+.azure/azureProfile.json
+.azure/service_principal_entries.json
+.azure/cli_token_cache.bin
+.netrc
+.pypirc
+
+# Editor temporary files and operating-system metadata
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini

@@ -1,0 +1,10 @@
+# T
+
+## S
+
+::: query-table 1234-abcd
+:::
+
+Ask @<A1B2C3D4-0000-0000-0000-000000000000> about #123.
+
+See [attachment](/.attachments/spec%20v1.pdf) and ![shot](/.attachments/shot-1.png).

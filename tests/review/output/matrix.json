@@ -1,0 +1,2456 @@
+{
+ "file-empty": {
+  "error": null,
+  "chunks": 0,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": []
+ },
+ "file-whitespace-only": {
+  "error": null,
+  "chunks": 0,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": []
+ },
+ "file-front-matter-only": {
+  "error": null,
+  "chunks": 0,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": []
+ },
+ "file-bom": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Title > Section",
+    "title": "Title",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 35,
+    "tokens": 10,
+    "head": "Title > Section\n\nBody after a BOM.\n"
+   }
+  ]
+ },
+ "file-crlf": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Title > Section A",
+    "title": "Title",
+    "start": 5,
+    "end": 6,
+    "part": "1/1",
+    "chars": 39,
+    "tokens": 11,
+    "head": "Title > Section A\n\nLine one.\nLine two.\n"
+   },
+   {
+    "heading_path": "Title > Section B",
+    "title": "Title",
+    "start": 10,
+    "end": 10,
+    "part": "1/1",
+    "chars": 27,
+    "tokens": 8,
+    "head": "Title > Section B\n\nBody B.\n"
+   }
+  ]
+ },
+ "file-mixed-eol": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Title > A",
+    "title": "Title",
+    "start": 5,
+    "end": 6,
+    "part": "1/1",
+    "chars": 27,
+    "tokens": 10,
+    "head": "Title > A\n\nCR only\nstill A\n"
+   },
+   {
+    "heading_path": "Title > B",
+    "title": "Title",
+    "start": 10,
+    "end": 10,
+    "part": "1/1",
+    "chars": 19,
+    "tokens": 7,
+    "head": "Title > B\n\nBody B.\n"
+   }
+  ]
+ },
+ "file-cp1252-french": {
+  "error": "source read rejected: UnicodeDecodeError",
+  "chunks": 0,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": []
+ },
+ "file-nfd-accents": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Procédure > Résumé",
+    "title": "Procédure",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 38,
+    "tokens": 14,
+    "head": "Procédure > Résumé\n\nLe café est prêt.\n"
+   }
+  ]
+ },
+ "file-nfc-accents": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Procédure > Résumé",
+    "title": "Procédure",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 38,
+    "tokens": 14,
+    "head": "Procédure > Résumé\n\nLe café est prêt.\n"
+   }
+  ]
+ },
+ "file-invisibles": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Invisibles > Zerowidth",
+    "title": "Invisibles",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 91,
+    "tokens": 40,
+    "head": "Invisibles > Zerowidth\n\nZero​width nbsp\ttab soft­hyphen emoji 😀👍🏽 and RTL مرحبا שלום text.\n"
+   }
+  ]
+ },
+ "file-no-trailing-newline": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Title > Section",
+    "title": "Title",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 43,
+    "tokens": 9,
+    "head": "Title > Section\n\nLast line without newline\n"
+   }
+  ]
+ },
+ "file-long-line": {
+  "error": null,
+  "chunks": 4,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [
+   5
+  ],
+  "rows": [
+   {
+    "heading_path": "Long > Section",
+    "title": "Long",
+    "start": 5,
+    "end": 5,
+    "part": "1/4",
+    "chars": 3797,
+    "tokens": 761,
+    "head": "Long > Section\n\nword word word word word word word word word word word word word word word word word word word word word word word word word word word word word"
+   },
+   {
+    "heading_path": "Long > Section",
+    "title": "Long",
+    "start": 5,
+    "end": 5,
+    "part": "2/4",
+    "chars": 3797,
+    "tokens": 761,
+    "head": "Long > Section\n\nword word word word word word word word word word word word word word word word word word word word word word word word word word word word word"
+   },
+   {
+    "heading_path": "Long > Section",
+    "title": "Long",
+    "start": 5,
+    "end": 5,
+    "part": "3/4",
+    "chars": 3797,
+    "tokens": 761,
+    "head": "Long > Section\n\nword word word word word word word word word word word word word word word word word word word word word word word word word word word word word"
+   },
+   {
+    "heading_path": "Long > Section",
+    "title": "Long",
+    "start": 5,
+    "end": 5,
+    "part": "4/4",
+    "chars": 3677,
+    "tokens": 737,
+    "head": "Long > Section\n\nword word word word word word word word word word word word word word word word word word word word word word word word word word word word word"
+   }
+  ]
+ },
+ "file-long-line-no-spaces": {
+  "error": null,
+  "chunks": 4,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [
+   5
+  ],
+  "rows": [
+   {
+    "heading_path": "Long > Section",
+    "title": "Long",
+    "start": 5,
+    "end": 5,
+    "part": "1/4",
+    "chars": 3800,
+    "tokens": 479,
+    "head": "Long > Section\n\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   {
+    "heading_path": "Long > Section",
+    "title": "Long",
+    "start": 5,
+    "end": 5,
+    "part": "2/4",
+    "chars": 3800,
+    "tokens": 479,
+    "head": "Long > Section\n\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   {
+    "heading_path": "Long > Section",
+    "title": "Long",
+    "start": 5,
+    "end": 5,
+    "part": "3/4",
+    "chars": 3800,
+    "tokens": 479,
+    "head": "Long > Section\n\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   {
+    "heading_path": "Long > Section",
+    "title": "Long",
+    "start": 5,
+    "end": 5,
+    "part": "4/4",
+    "chars": 668,
+    "tokens": 87,
+    "head": "Long > Section\n\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   }
+  ]
+ },
+ "file-large-1mb": {
+  "error": null,
+  "chunks": 2199,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Large > Section 1",
+    "title": "Large",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 481,
+    "tokens": 108,
+    "head": "Large > Section 1\n\nSentence 0-1 explains the synthetic escalation rule number 0 in plain words. Sentence 1-1 explains the synthetic escalation rule number 1 in "
+   },
+   {
+    "heading_path": "Large > Section 2",
+    "title": "Large",
+    "start": 9,
+    "end": 9,
+    "part": "1/1",
+    "chars": 481,
+    "tokens": 108,
+    "head": "Large > Section 2\n\nSentence 0-2 explains the synthetic escalation rule number 0 in plain words. Sentence 1-2 explains the synthetic escalation rule number 1 in "
+   },
+   {
+    "heading_path": "Large > Section 3",
+    "title": "Large",
+    "start": 13,
+    "end": 13,
+    "part": "1/1",
+    "chars": 481,
+    "tokens": 108,
+    "head": "Large > Section 3\n\nSentence 0-3 explains the synthetic escalation rule number 0 in plain words. Sentence 1-3 explains the synthetic escalation rule number 1 in "
+   },
+   {
+    "heading_path": "Large > Section 4",
+    "title": "Large",
+    "start": 17,
+    "end": 17,
+    "part": "1/1",
+    "chars": 481,
+    "tokens": 108,
+    "head": "Large > Section 4\n\nSentence 0-4 explains the synthetic escalation rule number 0 in plain words. Sentence 1-4 explains the synthetic escalation rule number 1 in "
+   },
+   {
+    "heading_path": "Large > Section 5",
+    "title": "Large",
+    "start": 21,
+    "end": 21,
+    "part": "1/1",
+    "chars": 481,
+    "tokens": 108,
+    "head": "Large > Section 5\n\nSentence 0-5 explains the synthetic escalation rule number 0 in plain words. Sentence 1-5 explains the synthetic escalation rule number 1 in "
+   },
+   {
+    "...": 2189
+   },
+   {
+    "heading_path": "Large > Section 2195",
+    "title": "Large",
+    "start": 8781,
+    "end": 8781,
+    "part": "1/1",
+    "chars": 502,
+    "tokens": 115,
+    "head": "Large > Section 2195\n\nSentence 0-2195 explains the synthetic escalation rule number 0 in plain words. Sentence 1-2195 explains the synthetic escalation rule num"
+   },
+   {
+    "heading_path": "Large > Section 2196",
+    "title": "Large",
+    "start": 8785,
+    "end": 8785,
+    "part": "1/1",
+    "chars": 502,
+    "tokens": 115,
+    "head": "Large > Section 2196\n\nSentence 0-2196 explains the synthetic escalation rule number 0 in plain words. Sentence 1-2196 explains the synthetic escalation rule num"
+   },
+   {
+    "heading_path": "Large > Section 2197",
+    "title": "Large",
+    "start": 8789,
+    "end": 8789,
+    "part": "1/1",
+    "chars": 502,
+    "tokens": 115,
+    "head": "Large > Section 2197\n\nSentence 0-2197 explains the synthetic escalation rule number 0 in plain words. Sentence 1-2197 explains the synthetic escalation rule num"
+   },
+   {
+    "heading_path": "Large > Section 2198",
+    "title": "Large",
+    "start": 8793,
+    "end": 8793,
+    "part": "1/1",
+    "chars": 502,
+    "tokens": 115,
+    "head": "Large > Section 2198\n\nSentence 0-2198 explains the synthetic escalation rule number 0 in plain words. Sentence 1-2198 explains the synthetic escalation rule num"
+   },
+   {
+    "heading_path": "Large > Section 2199",
+    "title": "Large",
+    "start": 8797,
+    "end": 8797,
+    "part": "1/1",
+    "chars": 502,
+    "tokens": 115,
+    "head": "Large > Section 2199\n\nSentence 0-2199 explains the synthetic escalation rule number 0 in plain words. Sentence 1-2199 explains the synthetic escalation rule num"
+   }
+  ]
+ },
+ "file-500-headings": {
+  "error": null,
+  "chunks": 600,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Many > H1",
+    "title": "Many",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 19,
+    "tokens": 9,
+    "head": "Many > H1\n\nBody 1.\n"
+   },
+   {
+    "heading_path": "Many > H2",
+    "title": "Many",
+    "start": 9,
+    "end": 9,
+    "part": "1/1",
+    "chars": 19,
+    "tokens": 9,
+    "head": "Many > H2\n\nBody 2.\n"
+   },
+   {
+    "heading_path": "Many > H3",
+    "title": "Many",
+    "start": 13,
+    "end": 13,
+    "part": "1/1",
+    "chars": 19,
+    "tokens": 9,
+    "head": "Many > H3\n\nBody 3.\n"
+   },
+   {
+    "heading_path": "Many > H4",
+    "title": "Many",
+    "start": 17,
+    "end": 17,
+    "part": "1/1",
+    "chars": 19,
+    "tokens": 9,
+    "head": "Many > H4\n\nBody 4.\n"
+   },
+   {
+    "heading_path": "Many > H5",
+    "title": "Many",
+    "start": 21,
+    "end": 21,
+    "part": "1/1",
+    "chars": 19,
+    "tokens": 9,
+    "head": "Many > H5\n\nBody 5.\n"
+   },
+   {
+    "...": 590
+   },
+   {
+    "heading_path": "Many > H596",
+    "title": "Many",
+    "start": 2385,
+    "end": 2385,
+    "part": "1/1",
+    "chars": 23,
+    "tokens": 9,
+    "head": "Many > H596\n\nBody 596.\n"
+   },
+   {
+    "heading_path": "Many > H597",
+    "title": "Many",
+    "start": 2389,
+    "end": 2389,
+    "part": "1/1",
+    "chars": 23,
+    "tokens": 9,
+    "head": "Many > H597\n\nBody 597.\n"
+   },
+   {
+    "heading_path": "Many > H598",
+    "title": "Many",
+    "start": 2393,
+    "end": 2393,
+    "part": "1/1",
+    "chars": 23,
+    "tokens": 9,
+    "head": "Many > H598\n\nBody 598.\n"
+   },
+   {
+    "heading_path": "Many > H599",
+    "title": "Many",
+    "start": 2397,
+    "end": 2397,
+    "part": "1/1",
+    "chars": 23,
+    "tokens": 9,
+    "head": "Many > H599\n\nBody 599.\n"
+   },
+   {
+    "heading_path": "Many > H600",
+    "title": "Many",
+    "start": 2401,
+    "end": 2401,
+    "part": "1/1",
+    "chars": 23,
+    "tokens": 9,
+    "head": "Many > H600\n\nBody 600.\n"
+   }
+  ]
+ },
+ "fm-valid": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Heading Title > Section",
+    "title": "Valid Title",
+    "start": 13,
+    "end": 13,
+    "part": "1/1",
+    "chars": 45,
+    "tokens": 10,
+    "head": "Valid Title > Heading Title > Section\n\nBody.\n"
+   }
+  ]
+ },
+ "fm-malformed": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Heading > S",
+    "title": "[unclosed",
+    "start": 10,
+    "end": 10,
+    "part": "1/1",
+    "chars": 31,
+    "tokens": 10,
+    "head": "[unclosed > Heading > S\n\nBody.\n"
+   }
+  ]
+ },
+ "fm-empty": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Heading > S",
+    "title": "Heading",
+    "start": 8,
+    "end": 8,
+    "part": "1/1",
+    "chars": 19,
+    "tokens": 6,
+    "head": "Heading > S\n\nBody.\n"
+   }
+  ]
+ },
+ "fm-unknown-keys": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Heading > S",
+    "title": "T",
+    "start": 13,
+    "end": 13,
+    "part": "1/1",
+    "chars": 23,
+    "tokens": 8,
+    "head": "T > Heading > S\n\nBody.\n"
+   }
+  ]
+ },
+ "fm-toml": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "",
+    "title": "Heading",
+    "start": 1,
+    "end": 4,
+    "part": "1/1",
+    "chars": 53,
+    "tokens": 18,
+    "head": "Heading\n\n+++\ntitle = \"Toml Title\"\nowner = \"team\"\n+++\n"
+   },
+   {
+    "heading_path": "Heading > S",
+    "title": "Heading",
+    "start": 10,
+    "end": 10,
+    "part": "1/1",
+    "chars": 19,
+    "tokens": 6,
+    "head": "Heading > S\n\nBody.\n"
+   }
+  ]
+ },
+ "fm-thematic-break-top": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "",
+    "title": "Heading",
+    "start": 1,
+    "end": 3,
+    "part": "1/1",
+    "chars": 54,
+    "tokens": 10,
+    "head": "Heading\n\n---\n\nIntro paragraph after a thematic break.\n"
+   },
+   {
+    "heading_path": "Heading > S",
+    "title": "Heading",
+    "start": 9,
+    "end": 13,
+    "part": "1/1",
+    "chars": 31,
+    "tokens": 9,
+    "head": "Heading > S\n\nBody.\n\n---\n\nTail.\n"
+   }
+  ]
+ },
+ "fm-title-differs": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Different H1 > S",
+    "title": "Front Matter Title",
+    "start": 9,
+    "end": 9,
+    "part": "1/1",
+    "chars": 45,
+    "tokens": 12,
+    "head": "Front Matter Title > Different H1 > S\n\nBody.\n"
+   }
+  ]
+ },
+ "fm-no-title-anywhere": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Only H2",
+    "title": "fixture",
+    "start": 3,
+    "end": 3,
+    "part": "1/1",
+    "chars": 49,
+    "tokens": 14,
+    "head": "fixture > Only H2\n\nBody without any H1 or title.\n"
+   }
+  ]
+ },
+ "fm-crlf": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "H > S",
+    "title": "CRLF",
+    "start": 9,
+    "end": 9,
+    "part": "1/1",
+    "chars": 20,
+    "tokens": 9,
+    "head": "CRLF > H > S\n\nBody.\n"
+   }
+  ]
+ },
+ "fm-bom": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "H > S",
+    "title": "BOM",
+    "start": 9,
+    "end": 9,
+    "part": "1/1",
+    "chars": 19,
+    "tokens": 9,
+    "head": "BOM > H > S\n\nBody.\n"
+   }
+  ]
+ },
+ "fm-hash-and-heading-like": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Real > S",
+    "title": "T",
+    "start": 12,
+    "end": 12,
+    "part": "1/1",
+    "chars": 20,
+    "tokens": 8,
+    "head": "T > Real > S\n\nBody.\n"
+   }
+  ]
+ },
+ "fm-dots-terminator": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "H > S",
+    "title": "T",
+    "start": 9,
+    "end": 9,
+    "part": "1/1",
+    "chars": 17,
+    "tokens": 8,
+    "head": "T > H > S\n\nBody.\n"
+   }
+  ]
+ },
+ "h-atx-setext": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Setext One",
+    "title": "Setext One",
+    "start": 4,
+    "end": 13,
+    "part": "1/1",
+    "chars": 91,
+    "tokens": 24,
+    "head": "Setext One\n\nUnder one.\n\nSetext Two\n----------\n\nUnder two.\n\n## ATX closed ##\n\nUnder closed.\n"
+   },
+   {
+    "heading_path": "Setext One > ATX closed > Deeper",
+    "title": "Setext One",
+    "start": 17,
+    "end": 17,
+    "part": "1/1",
+    "chars": 48,
+    "tokens": 14,
+    "head": "Setext One > ATX closed > Deeper\n\nUnder deeper.\n"
+   }
+  ]
+ },
+ "h-no-space": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "",
+    "title": "fixture",
+    "start": 1,
+    "end": 5,
+    "part": "1/1",
+    "chars": 68,
+    "tokens": 19,
+    "head": "fixture\n\n#NoSpace\n\n##AlsoNoSpace\n\nBody that is not under a heading.\n"
+   }
+  ]
+ },
+ "h-none": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "",
+    "title": "fixture",
+    "start": 1,
+    "end": 3,
+    "part": "1/1",
+    "chars": 67,
+    "tokens": 12,
+    "head": "fixture\n\nJust a paragraph.\n\nAnother paragraph without any heading.\n"
+   }
+  ]
+ },
+ "h-preamble": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "",
+    "title": "Title",
+    "start": 1,
+    "end": 1,
+    "part": "1/1",
+    "chars": 41,
+    "tokens": 9,
+    "head": "Title\n\nPreamble text before any heading.\n"
+   },
+   {
+    "heading_path": "Title > Section",
+    "title": "Title",
+    "start": 7,
+    "end": 7,
+    "part": "1/1",
+    "chars": 23,
+    "tokens": 6,
+    "head": "Title > Section\n\nBody.\n"
+   }
+  ]
+ },
+ "h-multiple-h1": {
+  "error": null,
+  "chunks": 3,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "One",
+    "title": "One",
+    "start": 3,
+    "end": 3,
+    "part": "1/1",
+    "chars": 8,
+    "tokens": 4,
+    "head": "One\n\nA.\n"
+   },
+   {
+    "heading_path": "Two",
+    "title": "One",
+    "start": 7,
+    "end": 7,
+    "part": "1/1",
+    "chars": 14,
+    "tokens": 6,
+    "head": "One > Two\n\nB.\n"
+   },
+   {
+    "heading_path": "Three",
+    "title": "One",
+    "start": 11,
+    "end": 11,
+    "part": "1/1",
+    "chars": 16,
+    "tokens": 6,
+    "head": "One > Three\n\nC.\n"
+   }
+  ]
+ },
+ "h-starts-h2": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Starts At H2",
+    "title": "fixture",
+    "start": 3,
+    "end": 7,
+    "part": "1/1",
+    "chars": 52,
+    "tokens": 17,
+    "head": "fixture > Starts At H2\n\nBody.\n\n### Then H3\n\nDeeper.\n"
+   }
+  ]
+ },
+ "h-starts-h3": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Starts At H3",
+    "title": "fixture",
+    "start": 3,
+    "end": 3,
+    "part": "1/1",
+    "chars": 30,
+    "tokens": 9,
+    "head": "fixture > Starts At H3\n\nBody.\n"
+   },
+   {
+    "heading_path": "Then H2",
+    "title": "fixture",
+    "start": 7,
+    "end": 7,
+    "part": "1/1",
+    "chars": 27,
+    "tokens": 8,
+    "head": "fixture > Then H2\n\nHigher.\n"
+   }
+  ]
+ },
+ "h-skipped-levels": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > Two",
+    "title": "T",
+    "start": 5,
+    "end": 9,
+    "part": "1/1",
+    "chars": 27,
+    "tokens": 11,
+    "head": "T > Two\n\nA.\n\n#### Four\n\nB.\n"
+   },
+   {
+    "heading_path": "T > Two b",
+    "title": "T",
+    "start": 13,
+    "end": 13,
+    "part": "1/1",
+    "chars": 14,
+    "tokens": 7,
+    "head": "T > Two b\n\nC.\n"
+   }
+  ]
+ },
+ "h-deep-oversize": {
+  "error": null,
+  "chunks": 3,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > Two > Three",
+    "title": "T",
+    "start": 7,
+    "end": 9,
+    "part": "1/3",
+    "chars": 2011,
+    "tokens": 436,
+    "head": "T > Two > Three\n\n#### Level 4\n\nSentence 0-L4 explains the synthetic escalation rule number 0 in plain words. Sentence 1-L4 explains the synthetic escalation rul"
+   },
+   {
+    "heading_path": "T > Two > Three",
+    "title": "T",
+    "start": 11,
+    "end": 13,
+    "part": "2/3",
+    "chars": 2012,
+    "tokens": 436,
+    "head": "T > Two > Three\n\n##### Level 5\n\nSentence 0-L5 explains the synthetic escalation rule number 0 in plain words. Sentence 1-L5 explains the synthetic escalation ru"
+   },
+   {
+    "heading_path": "T > Two > Three",
+    "title": "T",
+    "start": 15,
+    "end": 17,
+    "part": "3/3",
+    "chars": 2013,
+    "tokens": 436,
+    "head": "T > Two > Three\n\n###### Level 6\n\nSentence 0-L6 explains the synthetic escalation rule number 0 in plain words. Sentence 1-L6 explains the synthetic escalation r"
+   }
+  ]
+ },
+ "h-duplicates": {
+  "error": null,
+  "chunks": 4,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > Notes",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 24,
+    "tokens": 7,
+    "head": "T > Notes\n\nFirst notes.\n"
+   },
+   {
+    "heading_path": "T > Notes",
+    "title": "T",
+    "start": 9,
+    "end": 13,
+    "part": "1/1",
+    "chars": 41,
+    "tokens": 12,
+    "head": "T > Notes\n\nSecond notes.\n\n### Detail\n\nA.\n"
+   },
+   {
+    "heading_path": "T > Parent > Detail",
+    "title": "T",
+    "start": 19,
+    "end": 19,
+    "part": "1/1",
+    "chars": 24,
+    "tokens": 8,
+    "head": "T > Parent > Detail\n\nB.\n"
+   },
+   {
+    "heading_path": "T > Parent > Detail",
+    "title": "T",
+    "start": 23,
+    "end": 23,
+    "part": "1/1",
+    "chars": 24,
+    "tokens": 8,
+    "head": "T > Parent > Detail\n\nC.\n"
+   }
+  ]
+ },
+ "h-markup": {
+  "error": null,
+  "chunks": 5,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > Using kubectl and code",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 31,
+    "tokens": 10,
+    "head": "T > Using kubectl and code\n\nA.\n"
+   },
+   {
+    "heading_path": "T > Bold italic 😀 emoji!",
+    "title": "T",
+    "start": 9,
+    "end": 9,
+    "part": "1/1",
+    "chars": 29,
+    "tokens": 9,
+    "head": "T > Bold italic 😀 emoji!\n\nB.\n"
+   },
+   {
+    "heading_path": "T > HTML heading?",
+    "title": "T",
+    "start": 13,
+    "end": 13,
+    "part": "1/1",
+    "chars": 22,
+    "tokens": 7,
+    "head": "T > HTML heading?\n\nC.\n"
+   },
+   {
+    "heading_path": "T > Q&A # escaped © entity",
+    "title": "T",
+    "start": 17,
+    "end": 17,
+    "part": "1/1",
+    "chars": 31,
+    "tokens": 11,
+    "head": "T > Q&A # escaped © entity\n\nD.\n"
+   },
+   {
+    "heading_path": "T > Image alt text heading",
+    "title": "T",
+    "start": 21,
+    "end": 21,
+    "part": "1/1",
+    "chars": 31,
+    "tokens": 9,
+    "head": "T > Image alt text heading\n\nE.\n"
+   }
+  ]
+ },
+ "h-very-long": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > Very long heading Very long heading Very long heading Very long heading Very long heading Very long heading Very long heading Very long heading Very long heading Very long heading Very long heading V…",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 212,
+    "tokens": 39,
+    "head": "T > Very long heading Very long heading Very long heading Very long heading Very long heading Very long heading Very long heading Very long heading Very long he"
+   }
+  ]
+ },
+ "h-in-fence": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > Real",
+    "title": "T",
+    "start": 5,
+    "end": 10,
+    "part": "1/1",
+    "chars": 63,
+    "tokens": 20,
+    "head": "T > Real\n\n```md\n## Fake heading in fence\n# Another\n```\n\nAfter.\n"
+   }
+  ]
+ },
+ "h-in-html-block": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > Real",
+    "title": "T",
+    "start": 5,
+    "end": 13,
+    "part": "1/1",
+    "chars": 83,
+    "tokens": 27,
+    "head": "T > Real\n\n<div>\n## Fake heading in html\n</div>\n\nAfter.\n\n<pre>\n# Fake in pre\n</pre>\n"
+   }
+  ]
+ },
+ "h-empty-and-adjacent": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 29,
+    "tokens": 7,
+    "head": "T\n\nBody under empty heading.\n"
+   },
+   {
+    "heading_path": "T > C",
+    "title": "T",
+    "start": 11,
+    "end": 11,
+    "part": "1/1",
+    "chars": 24,
+    "tokens": 9,
+    "head": "T > C\n\nOnly C has body.\n"
+   }
+  ]
+ },
+ "h-in-quote-and-list": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > Quoted heading",
+    "title": "T",
+    "start": 4,
+    "end": 4,
+    "part": "1/1",
+    "chars": 33,
+    "tokens": 10,
+    "head": "T > Quoted heading\n\n> quote body\n"
+   },
+   {
+    "heading_path": "T > List heading",
+    "title": "T",
+    "start": 7,
+    "end": 9,
+    "part": "1/1",
+    "chars": 37,
+    "tokens": 11,
+    "head": "T > List heading\n\n  list body\n\nTail.\n"
+   }
+  ]
+ },
+ "h-indented-four": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T",
+    "title": "T",
+    "start": 3,
+    "end": 7,
+    "part": "1/1",
+    "chars": 55,
+    "tokens": 17,
+    "head": "T\n\n    ## indented code, not a heading\n\n## Real\n\nBody.\n"
+   }
+  ]
+ },
+ "code-backtick": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 9,
+    "part": "1/1",
+    "chars": 48,
+    "tokens": 17,
+    "head": "T > S\n\n```python title=x\nprint('a')\n```\n\nAfter.\n"
+   }
+  ]
+ },
+ "code-tilde": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 9,
+    "part": "1/1",
+    "chars": 35,
+    "tokens": 15,
+    "head": "T > S\n\n~~~bash\necho hi\n~~~\n\nAfter.\n"
+   }
+  ]
+ },
+ "code-nested-fence": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 11,
+    "part": "1/1",
+    "chars": 47,
+    "tokens": 23,
+    "head": "T > S\n\n````md\n```python\nx = 1\n```\n````\n\nAfter.\n"
+   }
+  ]
+ },
+ "code-unclosed": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 10,
+    "part": "1/1",
+    "chars": 62,
+    "tokens": 22,
+    "head": "T > S\n\n```python\nx = 1\n\n## Looks like heading\n\nstill code\n```\n"
+   }
+  ]
+ },
+ "code-oversize": {
+  "error": null,
+  "chunks": 4,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 116,
+    "part": "1/4",
+    "chars": 2576,
+    "tokens": 897,
+    "head": "T > S\n\n```python\nvalue_0 = compute(0)\nvalue_1 = compute(1)\nvalue_2 = compute(2)\nvalue_3 = compute(3)\nvalue_4 = compute(4)\nvalue_5 = compute(5)\nvalue_6 = compute"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 117,
+    "end": 227,
+    "part": "2/4",
+    "chars": 2796,
+    "tokens": 897,
+    "head": "T > S\n\n```python\nvalue_111 = compute(111)\nvalue_112 = compute(112)\nvalue_113 = compute(113)\nvalue_114 = compute(114)\nvalue_115 = compute(115)\nvalue_116 = comput"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 228,
+    "end": 338,
+    "part": "3/4",
+    "chars": 2796,
+    "tokens": 897,
+    "head": "T > S\n\n```python\nvalue_222 = compute(222)\nvalue_223 = compute(223)\nvalue_224 = compute(224)\nvalue_225 = compute(225)\nvalue_226 = compute(226)\nvalue_227 = comput"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 339,
+    "end": 406,
+    "part": "4/4",
+    "chars": 1696,
+    "tokens": 545,
+    "head": "T > S\n\n```python\nvalue_333 = compute(333)\nvalue_334 = compute(334)\nvalue_335 = compute(335)\nvalue_336 = compute(336)\nvalue_337 = compute(337)\nvalue_338 = comput"
+   }
+  ]
+ },
+ "code-indented": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 10,
+    "part": "1/1",
+    "chars": 53,
+    "tokens": 16,
+    "head": "T > S\n\nText.\n\n    indented_code()\n    more()\n\nAfter.\n"
+   }
+  ]
+ },
+ "table-wide": {
+  "error": null,
+  "chunks": 3,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 8,
+    "part": "1/3",
+    "chars": 1265,
+    "tokens": 688,
+    "head": "T > S\n\n| Col0 | Col1 | Col2 | Col3 | Col4 | Col5 | Col6 | Col7 | Col8 | Col9 | Col10 | Col11 | Col12 | Col13 | Col14 | Col15 | Col16 | Col17 | Col18 | Col19 | C"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 9,
+    "end": 10,
+    "part": "2/3",
+    "chars": 1265,
+    "tokens": 688,
+    "head": "T > S\n\n| Col0 | Col1 | Col2 | Col3 | Col4 | Col5 | Col6 | Col7 | Col8 | Col9 | Col10 | Col11 | Col12 | Col13 | Col14 | Col15 | Col16 | Col17 | Col18 | Col19 | C"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 11,
+    "end": 11,
+    "part": "3/3",
+    "chars": 913,
+    "tokens": 447,
+    "head": "T > S\n\n| Col0 | Col1 | Col2 | Col3 | Col4 | Col5 | Col6 | Col7 | Col8 | Col9 | Col10 | Col11 | Col12 | Col13 | Col14 | Col15 | Col16 | Col17 | Col18 | Col19 | C"
+   }
+  ]
+ },
+ "table-oversize": {
+  "error": null,
+  "chunks": 8,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 40,
+    "part": "1/8",
+    "chars": 1723,
+    "tokens": 876,
+    "head": "T > S\n\n| Col0 | Col1 | Col2 | Col3 |\n| --- | --- | --- | --- |\n| cell-0-0 | cell-0-1 | cell-0-2 | cell-0-3 |\n| cell-1-0 | cell-1-1 | cell-1-2 | cell-1-3 |\n| cel"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 41,
+    "end": 74,
+    "part": "2/8",
+    "chars": 1763,
+    "tokens": 876,
+    "head": "T > S\n\n| Col0 | Col1 | Col2 | Col3 |\n| --- | --- | --- | --- |\n| cell-34-0 | cell-34-1 | cell-34-2 | cell-34-3 |\n| cell-35-0 | cell-35-1 | cell-35-2 | cell-35-3"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 75,
+    "end": 108,
+    "part": "3/8",
+    "chars": 1771,
+    "tokens": 876,
+    "head": "T > S\n\n| Col0 | Col1 | Col2 | Col3 |\n| --- | --- | --- | --- |\n| cell-68-0 | cell-68-1 | cell-68-2 | cell-68-3 |\n| cell-69-0 | cell-69-1 | cell-69-2 | cell-69-3"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 109,
+    "end": 142,
+    "part": "4/8",
+    "chars": 1899,
+    "tokens": 876,
+    "head": "T > S\n\n| Col0 | Col1 | Col2 | Col3 |\n| --- | --- | --- | --- |\n| cell-102-0 | cell-102-1 | cell-102-2 | cell-102-3 |\n| cell-103-0 | cell-103-1 | cell-103-2 | ce"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 143,
+    "end": 176,
+    "part": "5/8",
+    "chars": 1899,
+    "tokens": 876,
+    "head": "T > S\n\n| Col0 | Col1 | Col2 | Col3 |\n| --- | --- | --- | --- |\n| cell-136-0 | cell-136-1 | cell-136-2 | cell-136-3 |\n| cell-137-0 | cell-137-1 | cell-137-2 | ce"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 177,
+    "end": 210,
+    "part": "6/8",
+    "chars": 1899,
+    "tokens": 876,
+    "head": "T > S\n\n| Col0 | Col1 | Col2 | Col3 |\n| --- | --- | --- | --- |\n| cell-170-0 | cell-170-1 | cell-170-2 | cell-170-3 |\n| cell-171-0 | cell-171-1 | cell-171-2 | ce"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 211,
+    "end": 244,
+    "part": "7/8",
+    "chars": 1899,
+    "tokens": 876,
+    "head": "T > S\n\n| Col0 | Col1 | Col2 | Col3 |\n| --- | --- | --- | --- |\n| cell-204-0 | cell-204-1 | cell-204-2 | cell-204-3 |\n| cell-205-0 | cell-205-1 | cell-205-2 | ce"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 245,
+    "end": 256,
+    "part": "8/8",
+    "chars": 711,
+    "tokens": 326,
+    "head": "T > S\n\n| Col0 | Col1 | Col2 | Col3 |\n| --- | --- | --- | --- |\n| cell-238-0 | cell-238-1 | cell-238-2 | cell-238-3 |\n| cell-239-0 | cell-239-1 | cell-239-2 | ce"
+   }
+  ]
+ },
+ "table-escaped-pipes": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 8,
+    "part": "1/1",
+    "chars": 62,
+    "tokens": 30,
+    "head": "T > S\n\n| A | B |\n| --- | --- |\n| a \\| b | c |\n| `x | y` | d |\n"
+   }
+  ]
+ },
+ "table-no-edge-pipes": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 8,
+    "part": "1/1",
+    "chars": 35,
+    "tokens": 21,
+    "head": "T > S\n\nA | B\n--- | ---\n1 | 2\n3 | 4\n"
+   }
+  ]
+ },
+ "table-alignment-empty-cells": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 8,
+    "part": "1/1",
+    "chars": 57,
+    "tokens": 31,
+    "head": "T > S\n\n| L | C | R |\n|:--|:-:|--:|\n| | x | |\n| a | | c |\n"
+   }
+  ]
+ },
+ "html-table": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 8,
+    "part": "1/1",
+    "chars": 84,
+    "tokens": 39,
+    "head": "T > S\n\n<table>\n<tr><th>A</th><th>B</th></tr>\n<tr><td>1</td><td>2</td></tr>\n</table>\n"
+   }
+  ]
+ },
+ "html-details": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 10,
+    "part": "1/1",
+    "chars": 95,
+    "tokens": 27,
+    "head": "T > S\n\n<details>\n<summary>Click for the answer</summary>\n\nThe hidden answer is 42.\n\n</details>\n"
+   }
+  ]
+ },
+ "html-br-div-inline": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 9,
+    "part": "1/1",
+    "chars": 135,
+    "tokens": 48,
+    "head": "T > S\n\nLine one<br>line two<br/>line three.\n\n<div class=\"x\">Wrapped <b>bold</b> text</div>\n\nInline <kbd>Ctrl</kbd>+<kbd>C</kbd> usage.\n"
+   }
+  ]
+ },
+ "list-ordered-start-5": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 7,
+    "part": "1/1",
+    "chars": 36,
+    "tokens": 16,
+    "head": "T > S\n\n5. Fifth\n6. Sixth\n7. Seventh\n"
+   }
+  ]
+ },
+ "list-nested-mixed": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 10,
+    "part": "1/1",
+    "chars": 78,
+    "tokens": 33,
+    "head": "T > S\n\n1. Top\n   - sub a\n     1. deep one\n        - deeper\n   - sub b\n2. Next\n"
+   }
+  ]
+ },
+ "list-tasks": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 6,
+    "part": "1/1",
+    "chars": 39,
+    "tokens": 17,
+    "head": "T > S\n\n- [x] done item\n- [ ] open item\n"
+   }
+  ]
+ },
+ "list-with-code-and-table": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 15,
+    "part": "1/1",
+    "chars": 110,
+    "tokens": 46,
+    "head": "T > S\n\n- Item with code:\n\n  ```sh\n  run --flag\n  ```\n\n- Item with table:\n\n  | A | B |\n  | - | - |\n  | 1 | 2 |\n"
+   }
+  ]
+ },
+ "quote-nested-and-alerts": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 12,
+    "part": "1/1",
+    "chars": 89,
+    "tokens": 29,
+    "head": "T > S\n\n> quote\n>> nested quote\n\n> [!NOTE]\n> Useful note.\n\n> [!WARNING]\n> Dangerous step.\n"
+   }
+  ]
+ },
+ "footnotes": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 71,
+    "tokens": 21,
+    "head": "T > S\n\nClaim with note[^1].\n\n[^1]: The footnote text lives at the end.\n"
+   },
+   {
+    "heading_path": "T > Other",
+    "title": "T",
+    "start": 9,
+    "end": 11,
+    "part": "1/1",
+    "chars": 60,
+    "tokens": 17,
+    "head": "T > Other\n\nBody.\n\n[^1]: The footnote text lives at the end.\n"
+   }
+  ]
+ },
+ "ref-links-defs-at-end": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 113,
+    "tokens": 31,
+    "head": "T > S\n\nSee [the policy][pol] and <https://example.invalid/auto>.\n\n[pol]: https://example.invalid/policy \"Policy\"\n"
+   },
+   {
+    "heading_path": "T > Other",
+    "title": "T",
+    "start": 9,
+    "end": 11,
+    "part": "1/1",
+    "chars": 65,
+    "tokens": 18,
+    "head": "T > Other\n\nBody.\n\n[pol]: https://example.invalid/policy \"Policy\"\n"
+   }
+  ]
+ },
+ "images": {
+  "error": null,
+  "chunks": 3,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [
+   13
+  ],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 11,
+    "part": "1/3",
+    "chars": 122,
+    "tokens": 43,
+    "head": "T > S\n\n![Alt text](img/a.png)\n\n![](img/no-alt.png)\n\n![Ref alt][r]\n\n<img src=\"img/b.png\" alt=\"Html alt\">\n\n[r]: img/ref.png\n"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 13,
+    "end": 13,
+    "part": "2/3",
+    "chars": 3800,
+    "tokens": 486,
+    "head": "T > S\n\n![b64](data:image/png;base64,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 13,
+    "end": 15,
+    "part": "3/3",
+    "chars": 2264,
+    "tokens": 292,
+    "head": "T > S\n\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+   }
+  ]
+ },
+ "math": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 9,
+    "part": "1/1",
+    "chars": 75,
+    "tokens": 40,
+    "head": "T > S\n\nInline $a^2 + b^2 = c^2$ and block:\n\n$$\n\\int_0^1 x\\,dx = \\frac12\n$$\n"
+   }
+  ]
+ },
+ "mermaid-fenced": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 8,
+    "part": "1/1",
+    "chars": 53,
+    "tokens": 23,
+    "head": "T > S\n\n```mermaid\ngraph TD\n  A[Start] --> B[End]\n```\n"
+   }
+  ]
+ },
+ "mermaid-ado": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 8,
+    "part": "1/1",
+    "chars": 42,
+    "tokens": 19,
+    "head": "T > S\n\n::: mermaid\ngraph TD\n  A --> B\n:::\n"
+   }
+  ]
+ },
+ "hr": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 13,
+    "part": "1/1",
+    "chars": 38,
+    "tokens": 12,
+    "head": "T > S\n\nAbove.\n\n***\n\nBelow.\n\n___\n\nEnd.\n"
+   }
+  ]
+ },
+ "ado-toc-tosp": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T",
+    "title": "T",
+    "start": 5,
+    "end": 9,
+    "part": "1/1",
+    "chars": 27,
+    "tokens": 13,
+    "head": "T\n\n[[_TOSP_]]\n\n## S\n\nBody.\n"
+   }
+  ]
+ },
+ "ado-container-mention-workitem": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 10,
+    "part": "1/1",
+    "chars": 180,
+    "tokens": 71,
+    "head": "T > S\n\n::: query-table 1234-abcd\n:::\n\nAsk @<A1B2C3D4-0000-0000-0000-000000000000> about #123.\n\nSee [attachment](/.attachments/spec%20v1.pdf) and ![shot](/.attac"
+   }
+  ]
+ },
+ "ado-order-file-like": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 7,
+    "part": "1/1",
+    "chars": 22,
+    "tokens": 10,
+    "head": "T > S\n\nhome\nsetup\nfaq\n"
+   }
+  ]
+ },
+ "html-comment": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 7,
+    "end": 14,
+    "part": "1/1",
+    "chars": 35,
+    "tokens": 11,
+    "head": "T > S\n\nVisible  text.\n\n\n\n\n\n\nAfter.\n"
+   }
+  ]
+ },
+ "onenote-layout-table": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 8,
+    "part": "1/1",
+    "chars": 70,
+    "tokens": 24,
+    "head": "T > S\n\n| | |\n|-|-|\n| **Left column text** | Right column text |\n| | |\n"
+   }
+  ]
+ },
+ "onenote-empty-paragraphs": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 13,
+    "part": "1/1",
+    "chars": 46,
+    "tokens": 14,
+    "head": "T > S\n\nPara one.\n\n&nbsp;\n\n\n\n&nbsp;\n\nPara two.\n"
+   }
+  ]
+ },
+ "onenote-hard-breaks": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 8,
+    "part": "1/1",
+    "chars": 51,
+    "tokens": 16,
+    "head": "T > S\n\nLine one  \nLine two  \nLine three\\\nLine four\n"
+   }
+  ]
+ },
+ "onenote-bold-headings": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "",
+    "title": "fixture",
+    "start": 1,
+    "end": 11,
+    "part": "1/1",
+    "chars": 110,
+    "tokens": 26,
+    "head": "fixture\n\n**Procedure overview**\n\nSteps here.\n\n**Escalation contacts**\n\nCall the desk.\n\n__Rollback__\n\nUndo it.\n"
+   }
+  ]
+ },
+ "onenote-deep-lists": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 16,
+    "part": "1/1",
+    "chars": 261,
+    "tokens": 75,
+    "head": "T > S\n\n- level 0\n  - level 1\n    - level 2\n      - level 3\n        - level 4\n          - level 5\n            - level 6\n              - level 7\n                -"
+   }
+  ]
+ },
+ "bilingual-mixed": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Politique de sécurité / Security Policy > Correctifs / Patching",
+    "title": "Politique de sécurité / Security Policy",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 191,
+    "tokens": 42,
+    "head": "Politique de sécurité / Security Policy > Correctifs / Patching\n\nLes vulnérabilités critiques doivent être corrigées dans les 14 jours. Critical vulnerabilities"
+   }
+  ]
+ },
+ "bilingual-en": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Patching Policy > Deadlines",
+    "title": "Patching Policy",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 84,
+    "tokens": 17,
+    "head": "Patching Policy > Deadlines\n\nCritical vulnerabilities must be fixed within 14 days.\n"
+   }
+  ]
+ },
+ "bilingual-fr": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Politique de correctifs > Délais",
+    "title": "Politique de correctifs",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 105,
+    "tokens": 28,
+    "head": "Politique de correctifs > Délais\n\nLes vulnérabilités critiques doivent être corrigées dans les 14 jours.\n"
+   }
+  ]
+ },
+ "prose-oversize-one-section": {
+  "error": null,
+  "chunks": 4,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [
+   5
+  ],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/4",
+    "chars": 3761,
+    "tokens": 740,
+    "head": "T > S\n\nSentence 0 explains the synthetic escalation rule number 0 in plain words. Sentence 1 explains the synthetic escalation rule number 1 in plain words. Sen"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "2/4",
+    "chars": 3781,
+    "tokens": 740,
+    "head": "T > S\n\nSentence 49 explains the synthetic escalation rule number 49 in plain words. Sentence 50 explains the synthetic escalation rule number 50 in plain words."
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "3/4",
+    "chars": 3796,
+    "tokens": 725,
+    "head": "T > S\n\nSentence 98 explains the synthetic escalation rule number 98 in plain words. Sentence 99 explains the synthetic escalation rule number 99 in plain words."
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "4/4",
+    "chars": 323,
+    "tokens": 64,
+    "head": "T > S\n\nSentence 146 explains the synthetic escalation rule number 146 in plain words. Sentence 147 explains the synthetic escalation rule number 147 in plain wo"
+   }
+  ]
+ },
+ "prose-oversize-paragraphs": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 15,
+    "part": "1/2",
+    "chars": 3756,
+    "tokens": 820,
+    "head": "T > S\n\nSentence 0-p0 explains the synthetic escalation rule number 0 in plain words. Sentence 1-p0 explains the synthetic escalation rule number 1 in plain word"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 17,
+    "end": 27,
+    "part": "2/2",
+    "chars": 3772,
+    "tokens": 820,
+    "head": "T > S\n\nSentence 0-p6 explains the synthetic escalation rule number 0 in plain words. Sentence 1-p6 explains the synthetic escalation rule number 1 in plain word"
+   }
+  ]
+ },
+ "tiny-sections": {
+  "error": null,
+  "chunks": 3,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > A",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 17,
+    "tokens": 7,
+    "head": "T > A\n\nOne line.\n"
+   },
+   {
+    "heading_path": "T > B",
+    "title": "T",
+    "start": 9,
+    "end": 9,
+    "part": "1/1",
+    "chars": 12,
+    "tokens": 6,
+    "head": "T > B\n\nTwo.\n"
+   },
+   {
+    "heading_path": "T > C",
+    "title": "T",
+    "start": 13,
+    "end": 13,
+    "part": "1/1",
+    "chars": 14,
+    "tokens": 6,
+    "head": "T > C\n\nThree.\n"
+   }
+  ]
+ },
+ "link-split-risk": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 3366,
+    "tokens": 631,
+    "head": "T > S\n\nfiller words filler words filler words filler words filler words filler words filler words filler words filler words filler words filler words filler wor"
+   }
+  ]
+ },
+ "combining-marks-oversize": {
+  "error": null,
+  "chunks": 4,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [
+   5
+  ],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/4",
+    "chars": 903,
+    "tokens": 900,
+    "head": "T > S\n\nééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "2/4",
+    "chars": 903,
+    "tokens": 900,
+    "head": "T > S\n\nééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "3/4",
+    "chars": 903,
+    "tokens": 900,
+    "head": "T > S\n\nééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "4/4",
+    "chars": 323,
+    "tokens": 320,
+    "head": "T > S\n\nééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé"
+   }
+  ]
+ },
+ "table-long-row": {
+  "error": null,
+  "chunks": 3,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [
+   7
+  ],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 6,
+    "part": "1/3",
+    "chars": 27,
+    "tokens": 14,
+    "head": "T > S\n\n| A | B |\n| - | - |\n"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 7,
+    "end": 7,
+    "part": "2/3",
+    "chars": 3800,
+    "tokens": 770,
+    "head": "T > S\n\n| A | B |\n| - | - |\n| long cell text long cell text long cell text long cell text long cell text long cell text long cell text long cell text long cell t"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 7,
+    "end": 7,
+    "part": "3/3",
+    "chars": 2264,
+    "tokens": 464,
+    "head": "T > S\n\n| A | B |\n| - | - |\ncell text long cell text long cell text long cell text long cell text long cell text long cell text long cell text long cell text lon"
+   }
+  ]
+ },
+ "table-header-exceeds-cap": {
+  "error": null,
+  "chunks": 3,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [
+   5
+  ],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/3",
+    "chars": 3484,
+    "tokens": 900,
+    "head": "T > S\n\n| Column name number 0 xxxxxxxxxx | Column name number 1 xxxxxxxxxx | Column name number 2 xxxxxxxxxx | Column name number 3 xxxxxxxxxx | Column name num"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "2/3",
+    "chars": 3586,
+    "tokens": 900,
+    "head": "T > S\n\n99 xxxxxxxxxx | Column name number 100 xxxxxxxxxx | Column name number 101 xxxxxxxxxx | Column name number 102 xxxxxxxxxx | Column name number 103 xxxxxx"
+   },
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 7,
+    "part": "3/3",
+    "chars": 2049,
+    "tokens": 816,
+    "head": "T > S\n\n| Column name number 199 xxxxxxxxxx |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |"
+   }
+  ]
+ },
+ "h-gigantic-5000": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH…",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 212,
+    "tokens": 105,
+    "head": "T > HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+   }
+  ]
+ },
+ "html-comment-heading": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 12,
+    "part": "1/1",
+    "chars": 28,
+    "tokens": 9,
+    "head": "T > S\n\nBefore.\n\n\n\n\n\n\nAfter.\n"
+   }
+  ]
+ },
+ "h-html-block-heading": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > Real",
+    "title": "T",
+    "start": 5,
+    "end": 15,
+    "part": "1/1",
+    "chars": 118,
+    "tokens": 35,
+    "head": "T > Real\n\n<details>\n<summary>More</summary>\n## Not a section\n\nInside.\n\n</details>\n\n<div>\n## Also not a section\n</div>\n"
+   }
+  ]
+ },
+ "h4-under-h3-small": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > Two > Three",
+    "title": "T",
+    "start": 7,
+    "end": 15,
+    "part": "1/1",
+    "chars": 58,
+    "tokens": 20,
+    "head": "T > Two > Three\n\nIntro.\n\n#### Four a\n\nA.\n\n#### Four b\n\nB.\n"
+   }
+  ]
+ },
+ "ref-definition-same-section-far": {
+  "error": null,
+  "chunks": 2,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "T > S",
+    "title": "T",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 60,
+    "tokens": 19,
+    "head": "T > S\n\nSee [policy][pol].\n\n[pol]: https://example.invalid/p\n"
+   },
+   {
+    "heading_path": "T > Other",
+    "title": "T",
+    "start": 9,
+    "end": 11,
+    "part": "1/1",
+    "chars": 51,
+    "tokens": 15,
+    "head": "T > Other\n\nText.\n\n[pol]: https://example.invalid/p\n"
+   }
+  ]
+ },
+ "near-duplicate-old": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Vulnerability Handling (2021) > Deadlines",
+    "title": "Vulnerability Handling (2021)",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 117,
+    "tokens": 25,
+    "head": "Vulnerability Handling (2021) > Deadlines\n\nCritical vulnerabilities must be remediated within 30 days of disclosure.\n"
+   }
+  ]
+ },
+ "near-duplicate-new": {
+  "error": null,
+  "chunks": 1,
+  "uncovered_lines": [],
+  "multiply_claimed_lines": [],
+  "rows": [
+   {
+    "heading_path": "Vulnerability Handling (2024) > Deadlines",
+    "title": "Vulnerability Handling (2024)",
+    "start": 5,
+    "end": 5,
+    "part": "1/1",
+    "chars": 167,
+    "tokens": 39,
+    "head": "Vulnerability Handling (2024) > Deadlines\n\nCritical vulnerabilities must be remediated within 14 days of disclosure. This replaces the 30 day rule of the 2021 p"
+   }
+  ]
+ }
+}

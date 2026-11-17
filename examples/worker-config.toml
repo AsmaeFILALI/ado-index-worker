@@ -1,0 +1,22 @@
+# Fill these explicit source inputs. This example cannot authorize publication.
+source_root = "<APPROVED_CONTENT_CHECKOUT>"
+# repo_id, repo_url and source_ref identify the CONTENT repository that holds the Markdown.
+repo_id = "<IMMUTABLE_REPOSITORY_ID>"
+source_ref = "refs/heads/<APPROVED_BRANCH>"
+commit = "<FULL_IMMUTABLE_COMMIT_ID>"
+repo_url = "https://dev.azure.com/<ORG>/<PROJECT>/_git/<REPOSITORY>"
+
+# Git path globs are case-sensitive. ** matches zero or more directories.
+include = ["**/*.md"]
+exclude = []
+
+# Relative filesystem paths are resolved relative to this configuration file.
+contract = "../docs/index-contract.json"
+tokenizer_cache = "../.cache/tiktoken"
+target_tokens = 900
+max_content_chars = 3800
+max_input_tokens = 8000
+overlap_tokens = 0
+model = "text-embedding-3-large"
+deployment = "text-embedding"
+dimensions = 3072

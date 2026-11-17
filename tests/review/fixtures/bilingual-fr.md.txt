@@ -1,0 +1,5 @@
+# Politique de correctifs
+
+## Délais
+
+Les vulnérabilités critiques doivent être corrigées dans les 14 jours.

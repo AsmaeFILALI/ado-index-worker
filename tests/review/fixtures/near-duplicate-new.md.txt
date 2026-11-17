@@ -1,0 +1,5 @@
+# Vulnerability Handling (2024)
+
+## Deadlines
+
+Critical vulnerabilities must be remediated within 14 days of disclosure. This replaces the 30 day rule of the 2021 policy.

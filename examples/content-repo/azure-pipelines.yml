@@ -1,0 +1,82 @@
+# Copy to the CONTENT repository only after owner review and placeholder replacement.
+# Default setup: proof of concept. The schema and the approval waiver live in the worker repository's
+# config/<name>/ folder, so no secure file or variable group is used (see docs/deployment.md).
+# For a production admission delivered through Library, see docs/operations.md section 4.
+# Azure Repos PR integration uses a build-validation branch policy, not YAML pr triggers.
+trigger:
+  branches:
+    include: [main]
+  paths:
+    include:
+      - docs/**
+      - azure-pipelines.yml
+pr: none
+
+schedules:
+  - cron: '0 3 * * *'
+    displayName: Nightly authoritative reconciliation (UTC)
+    branches:
+      include: [main]
+    always: true
+
+parameters:
+  - name: enablePublishing
+    displayName: Enable admitted Azure writes (false until separately authorized)
+    type: boolean
+    default: false
+  - name: operation
+    type: string
+    default: sync
+    values: [sync, reconcile, rebuild]
+  - name: sourceConfig
+    displayName: Reviewed source rules in the pinned worker repository
+    type: string
+    default: config/<NAME>/pipeline-source.toml
+  - name: publishingConfig
+    displayName: Reviewed target configuration in the pinned worker repository
+    type: string
+    default: config/<NAME>/publishing-config.toml
+  # The schema and the approval waiver come from the worker repository's config/<name>/ folder, so this
+  # proof-of-concept file has no secure-file parameters. For a production admission delivered through
+  # Library, see docs/operations.md section 4.
+
+resources:
+  repositories:
+    - repository: ingestionWorker
+      type: git
+      name: <WORKER_PROJECT>/<WORKER_REPOSITORY>
+      # Use an immutable tag; Azure Pipelines does not officially accept a bare SHA here.
+      # workerCommit below must equal the tag's commit or the run fails closed.
+      ref: refs/tags/<REVIEWED_IMMUTABLE_WORKER_TAG>
+
+stages:
+  - stage: Validate
+    jobs:
+      - template: pipelines/templates/ingest-job.yml@ingestionWorker
+        parameters:
+          operation: plan
+          jobName: OfflineValidation
+          approvedRef: refs/heads/main
+          workerCommit: <REVIEWED_40_CHARACTER_WORKER_COMMIT>
+          sourceConfig: ${{ parameters.sourceConfig }}
+  - ${{ if and(eq(parameters.enablePublishing, true), ne(variables['Build.Reason'], 'PullRequest')) }}:
+      - stage: Publish
+        dependsOn: Validate
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), in(variables['Build.Reason'], 'Manual', 'IndividualCI', 'BatchedCI', 'Schedule'))
+        jobs:
+          - template: pipelines/templates/ingest-job.yml@ingestionWorker
+            parameters:
+              jobName: PublishIngestion
+              approvedRef: refs/heads/main
+              workerCommit: <REVIEWED_40_CHARACTER_WORKER_COMMIT>
+              ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
+                operation: reconcile
+              ${{ else }}:
+                operation: ${{ parameters.operation }}
+              sourceConfig: ${{ parameters.sourceConfig }}
+              publishingConfig: ${{ parameters.publishingConfig }}
+              environment: <PRECREATED_PROTECTED_INGESTION_ENVIRONMENT>
+              serviceConnection: <AUTHORIZED_WIF_SERVICE_CONNECTION>
+              serviceConnectionId: <AUTHORIZED_SERVICE_CONNECTION_UUID>
+              # Production only, with a per-commit admission (docs/operations.md section 4):
+              # approvalVariableGroup: <OWNER_CONTROLLED_ADMISSION_PIN_VARIABLE_GROUP>

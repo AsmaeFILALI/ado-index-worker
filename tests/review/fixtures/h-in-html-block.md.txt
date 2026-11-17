@@ -1,0 +1,13 @@
+# T
+
+## Real
+
+<div>
+## Fake heading in html
+</div>
+
+After.
+
+<pre>
+# Fake in pre
+</pre>

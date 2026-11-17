@@ -1,0 +1,5 @@
+# Patching Policy
+
+## Deadlines
+
+Critical vulnerabilities must be fixed within 14 days.

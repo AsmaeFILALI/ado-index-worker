@@ -1,0 +1,11 @@
+# T
+
+## S
+
+See [the policy][pol] and <https://example.invalid/auto>.
+
+## Other
+
+Body.
+
+[pol]: https://example.invalid/policy "Policy"

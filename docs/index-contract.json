@@ -1,0 +1,90 @@
+{
+  "contractId": "ado-markdown-ingestion",
+  "contractVersion": "1.0.0-draft",
+  "status": "Consumer requirements; the platform team owns the index schema",
+  "artifactKind": "consumer-contract-not-deployable-index",
+  "platformOwnsSchema": true,
+  "exampleIndexName": "<INDEX_NAME>",
+  "compatibilityRules": {
+    "allowAdditionalPlatformFields": true,
+    "requiredFieldCountIsNotPhysicalIndexFieldCount": true,
+    "compareDeclaredPropertiesAfterNormalizingServiceDefaults": true,
+    "neverCreateOrModifySchemaFromThisArtifact": true,
+    "publishingRequiresPinnedPlatformSchemaAndValidatedTarget": true,
+    "offlineDevelopmentCanUseThisContractWithoutAzure": true,
+    "permissionContractIsSeparateAndUnresolved": true
+  },
+  "requiredFields": [
+    { "name": "id", "type": "Edm.String", "key": true, "searchable": true, "filterable": true, "retrievable": true, "analyzer": "keyword" },
+    { "name": "parent_id", "type": "Edm.String", "searchable": false, "filterable": true, "retrievable": true },
+    { "name": "title", "type": "Edm.String", "searchable": true, "filterable": true, "retrievable": true, "analyzer": "standard.lucene" },
+    { "name": "content", "type": "Edm.String", "searchable": true, "retrievable": true, "analyzer": "standard.lucene" },
+    { "name": "contentVector", "type": "Collection(Edm.Single)", "searchable": true, "retrievable": true, "dimensions": 3072, "vectorSearchProfile": "default" },
+    { "name": "url", "type": "Edm.String", "searchable": false, "retrievable": true },
+    { "name": "filepath", "type": "Edm.String", "searchable": true, "filterable": true, "retrievable": true, "analyzer": "standard" },
+    { "name": "source", "type": "Edm.String", "searchable": false, "filterable": true, "retrievable": true },
+    { "name": "repo_id", "type": "Edm.String", "key": false, "searchable": false, "filterable": true, "sortable": false, "facetable": false, "retrievable": true },
+    { "name": "source_ref", "type": "Edm.String", "key": false, "searchable": false, "filterable": true, "sortable": false, "facetable": false, "retrievable": true },
+    { "name": "source_path", "type": "Edm.String", "key": false, "searchable": false, "filterable": true, "sortable": false, "facetable": false, "retrievable": true },
+    { "name": "heading_path", "type": "Edm.String", "key": false, "searchable": true, "filterable": false, "sortable": false, "facetable": false, "retrievable": true, "analyzer": "standard.lucene" },
+    { "name": "section_id", "type": "Edm.String", "key": false, "searchable": false, "filterable": true, "sortable": false, "facetable": false, "retrievable": true },
+    { "name": "chunk_id", "type": "Edm.Int32", "searchable": false, "retrievable": true },
+    { "name": "part", "type": "Edm.Int32", "key": false, "searchable": false, "filterable": false, "sortable": false, "facetable": false, "retrievable": true },
+    { "name": "part_count", "type": "Edm.Int32", "key": false, "searchable": false, "filterable": false, "sortable": false, "facetable": false, "retrievable": true },
+    { "name": "start_line", "type": "Edm.Int32", "key": false, "searchable": false, "filterable": false, "sortable": false, "facetable": false, "retrievable": true },
+    { "name": "end_line", "type": "Edm.Int32", "key": false, "searchable": false, "filterable": false, "sortable": false, "facetable": false, "retrievable": true },
+    { "name": "source_version_id", "type": "Edm.String", "searchable": false, "filterable": true, "retrievable": true },
+    { "name": "content_checksum_sha256", "type": "Edm.String", "searchable": false, "filterable": true, "retrievable": true },
+    { "name": "ingested_at", "type": "Edm.DateTimeOffset", "searchable": false, "filterable": true, "sortable": true, "retrievable": true },
+    { "name": "ingest_run_id", "type": "Edm.String", "searchable": false, "filterable": true, "retrievable": true },
+    { "name": "pipeline_version", "type": "Edm.String", "key": false, "searchable": false, "filterable": true, "sortable": false, "facetable": false, "retrievable": true }
+  ],
+  "attributeInterpretation": {
+    "omittedRequiredProperties": "not constrained by this consumer contract; inherit pinned platform definition",
+    "omissionDoesNotMeanFalse": true,
+    "newFieldMinimalSortFacetFlags": "explicit defaults for new extensions, not changes to existing bundled fields",
+    "nonIdFieldsCannotBeIndexKey": true,
+    "doNotUseSdkConstructorDefaultsAsEvidenceOfServiceProperties": true
+  },
+  "valueRules": {
+    "source": "azure_devops",
+    "urlEqualsFilepath": true,
+    "citationTarget": "Azure DevOps Git source revision; line/section URL syntax must be validated",
+    "sourcePath": "repository-relative Git path; not a citation URL",
+    "chunkIdStartsAt": 0,
+    "partStartsAt": 1,
+    "sourceLines": "one-based inclusive",
+    "sourceVersionId": "immutable source commit used for this document version",
+    "checksum": "SHA-256 of documented canonical indexed chunk text",
+    "timestamps": "UTC DateTimeOffset",
+    "vectorValidation": "exact dimensions; finite numeric values; never dummy production vectors"
+  },
+  "embeddingRequirements": {
+    "model": "text-embedding-3-large",
+    "deploymentNameBaseline": "text-embedding",
+    "dimensions": 3072,
+    "sameIngestionAndQueryModelRequired": true,
+    "matchingDimensionsAloneIsInsufficient": true,
+    "configurationFingerprintRequired": true,
+    "recordEffectiveModelRevisionWhenAvailable": true,
+    "neverInferAnUnreportedModelRevision": true
+  },
+  "vectorRequirements": {
+    "field": "contentVector",
+    "profile": "default",
+    "algorithmKind": "hnsw",
+    "metric": "cosine",
+    "queryVectorizerRequired": true,
+    "queryVectorizerKind": "azureOpenAI",
+    "doNotSelectVectorsIntoModelContext": true
+  },
+  "semanticRequirements": {
+    "name": "semantic-config",
+    "defaultConfiguration": "semantic-config",
+    "titleField": "title",
+    "contentFields": ["content"],
+    "keywordFields": ["heading_path", "category"],
+    "allSemanticFieldsMustBeSearchableAndRetrievable": true,
+    "category": "existing platform field; populate only when meaningful"
+  }
+}

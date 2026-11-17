@@ -1,0 +1,21 @@
+# T
+
+## Using [kubectl](https://example.invalid/very/long/url) and `code`
+
+A.
+
+## **Bold** _italic_ 😀 emoji!
+
+B.
+
+## <span>HTML</span> heading?
+
+C.
+
+## Q&amp;A \# escaped &copy; entity
+
+D.
+
+## Image ![alt text](a.png) heading
+
+E.

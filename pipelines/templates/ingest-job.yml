@@ -1,0 +1,190 @@
+parameters:
+  - name: operation
+    type: string
+    default: plan
+    values: [plan, sync, reconcile, rebuild]
+  - name: jobName
+    type: string
+    default: Ingest
+  - name: approvedRef
+    type: string
+    default: refs/heads/main
+  - name: workerCommit
+    type: string
+    default: ''
+  - name: sourceConfig
+    type: string
+    default: examples/pipeline-source.toml
+  - name: publishingConfig
+    type: string
+    default: examples/publishing-config.toml
+  - name: pool
+    type: object
+    default:
+      vmImage: ubuntu-latest
+  # download (hosted agents) or local (self-hosted agent without package-index access).
+  - name: toolchain
+    type: string
+    default: download
+    values: [download, local]
+  - name: environment
+    type: string
+    default: <PRECREATED_PROTECTED_INGESTION_ENVIRONMENT>
+  - name: serviceConnection
+    type: string
+    default: <AUTHORIZED_WIF_SERVICE_CONNECTION>
+  - name: serviceConnectionId
+    type: string
+    default: <AUTHORIZED_SERVICE_CONNECTION_UUID>
+  - name: schemaSecureFile
+    type: string
+    default: ''
+  - name: admissionSecureFile
+    type: string
+    default: ''
+  - name: approvalVariableGroup
+    type: string
+    default: ''
+
+jobs:
+  - ${{ if eq(parameters.operation, 'plan') }}:
+      - job: ${{ parameters.jobName }}
+        displayName: Offline ingestion validation
+        pool: ${{ parameters.pool }}
+        steps:
+          - checkout: self
+            path: s/content
+            fetchDepth: 0
+            persistCredentials: false
+          - checkout: ingestionWorker
+            path: s/worker
+            fetchDepth: 0
+            persistCredentials: false
+          - template: setup-worker.yml
+            parameters:
+              workerRoot: $(Pipeline.Workspace)/s/worker
+              toolchain: ${{ parameters.toolchain }}
+          - pwsh: |
+              $ErrorActionPreference = 'Stop'
+              uv run --locked --offline pytest -q
+              if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            displayName: Original synthetic offline tests (including PR validation)
+            workingDirectory: $(Pipeline.Workspace)/s/worker
+            ${{ if eq(parameters.toolchain, 'local') }}:
+              env:
+                UV_NO_SYNC: '1'
+          - pwsh: |
+              $ErrorActionPreference = 'Stop'
+              uv run --locked --offline python -m ado_markdown_ingestion.pipeline check
+              if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            displayName: Check the pull-request Markdown (offline, no secrets)
+            condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+            workingDirectory: $(Pipeline.Workspace)/s/worker
+            env:
+              INGEST_WORKER_ROOT: $(Pipeline.Workspace)/s/worker
+              INGEST_SOURCE_ROOT: $(Pipeline.Workspace)/s/content
+              INGEST_WORKER_COMMIT: ${{ parameters.workerCommit }}
+              INGEST_RESOLVED_WORKER_COMMIT: $(resources.repositories.ingestionWorker.version)
+              INGEST_SOURCE_CONFIG: ${{ parameters.sourceConfig }}
+              INGEST_TEMP_ROOT: $(Agent.TempDirectory)
+              ${{ if eq(parameters.toolchain, 'local') }}:
+                UV_NO_SYNC: '1'
+              BUILD_REASON: $(Build.Reason)
+              BUILD_SOURCEVERSION: $(Build.SourceVersion)
+              BUILD_REPOSITORY_ID: $(Build.Repository.ID)
+          - pwsh: |
+              $ErrorActionPreference = 'Stop'
+              uv run --locked --offline python -m ado_markdown_ingestion.pipeline plan
+              if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            displayName: Plan the approved immutable content snapshot
+            condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], '${{ parameters.approvedRef }}'))
+            workingDirectory: $(Pipeline.Workspace)/s/worker
+            env:
+              INGEST_WORKER_ROOT: $(Pipeline.Workspace)/s/worker
+              INGEST_SOURCE_ROOT: $(Pipeline.Workspace)/s/content
+              INGEST_WORKER_COMMIT: ${{ parameters.workerCommit }}
+              INGEST_RESOLVED_WORKER_COMMIT: $(resources.repositories.ingestionWorker.version)
+              INGEST_SOURCE_CONFIG: ${{ parameters.sourceConfig }}
+              INGEST_APPROVED_REF: ${{ parameters.approvedRef }}
+              INGEST_TEMP_ROOT: $(Agent.TempDirectory)
+              ${{ if eq(parameters.toolchain, 'local') }}:
+                UV_NO_SYNC: '1'
+              BUILD_REASON: $(Build.Reason)
+              BUILD_SOURCEBRANCH: $(Build.SourceBranch)
+              BUILD_SOURCEVERSION: $(Build.SourceVersion)
+              BUILD_REPOSITORY_ID: $(Build.Repository.ID)
+  - ${{ if ne(parameters.operation, 'plan') }}:
+      - deployment: ${{ parameters.jobName }}
+        displayName: Admitted existing-index ingestion
+        condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], '${{ parameters.approvedRef }}'), in(variables['Build.Reason'], 'Manual', 'IndividualCI', 'BatchedCI', 'Schedule'))
+        pool: ${{ parameters.pool }}
+        environment: ${{ parameters.environment }}
+        ${{ if ne(parameters.approvalVariableGroup, '') }}:
+          variables:
+            - group: ${{ parameters.approvalVariableGroup }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: none
+                - checkout: self
+                  path: s/content
+                  fetchDepth: 0
+                  persistCredentials: false
+                - checkout: ingestionWorker
+                  path: s/worker
+                  fetchDepth: 0
+                  persistCredentials: false
+                - template: setup-worker.yml
+                  parameters:
+                    workerRoot: $(Pipeline.Workspace)/s/worker
+                    toolchain: ${{ parameters.toolchain }}
+                - ${{ if ne(parameters.schemaSecureFile, '') }}:
+                    - task: DownloadSecureFile@1
+                      name: platformSchema
+                      inputs:
+                        secureFile: ${{ parameters.schemaSecureFile }}
+                - ${{ if ne(parameters.admissionSecureFile, '') }}:
+                    - task: DownloadSecureFile@1
+                      name: sourceAdmission
+                      inputs:
+                        secureFile: ${{ parameters.admissionSecureFile }}
+                - task: AzureCLI@2
+                  displayName: Federated scoped publication
+                  inputs:
+                    azureSubscription: ${{ parameters.serviceConnection }}
+                    scriptType: pscore
+                    scriptLocation: inlineScript
+                    addSpnToEnvironment: true
+                    visibleAzLogin: false
+                    useGlobalConfig: false
+                    failOnStandardError: false
+                    workingDirectory: $(Pipeline.Workspace)/s/worker
+                    inlineScript: |
+                      $ErrorActionPreference = 'Stop'
+                      uv run --locked --offline python -m ado_markdown_ingestion.pipeline publish --operation $env:INGEST_OPERATION
+                      if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+                  env:
+                    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+                    INGEST_ALLOW_PUBLISH: 'true'
+                    ${{ if eq(parameters.toolchain, 'local') }}:
+                      UV_NO_SYNC: '1'
+                    INGEST_OPERATION: ${{ parameters.operation }}
+                    INGEST_WORKER_ROOT: $(Pipeline.Workspace)/s/worker
+                    INGEST_SOURCE_ROOT: $(Pipeline.Workspace)/s/content
+                    INGEST_WORKER_COMMIT: ${{ parameters.workerCommit }}
+                    INGEST_RESOLVED_WORKER_COMMIT: $(resources.repositories.ingestionWorker.version)
+                    INGEST_SOURCE_CONFIG: ${{ parameters.sourceConfig }}
+                    INGEST_APPROVED_REF: ${{ parameters.approvedRef }}
+                    INGEST_TEMP_ROOT: $(Agent.TempDirectory)
+                    INGEST_PUBLISHING_CONFIG: ${{ parameters.publishingConfig }}
+                    ${{ if ne(parameters.schemaSecureFile, '') }}:
+                      INGEST_SCHEMA_PATH: $(platformSchema.secureFilePath)
+                    ${{ if ne(parameters.admissionSecureFile, '') }}:
+                      INGEST_ADMISSION_PATH: $(sourceAdmission.secureFilePath)
+                      INGEST_ADMISSION_SHA256: $(Ingestion.AdmissionSha256)
+                    INGEST_SERVICE_CONNECTION_ID: ${{ parameters.serviceConnectionId }}
+                    BUILD_REASON: $(Build.Reason)
+                    BUILD_SOURCEBRANCH: $(Build.SourceBranch)
+                    BUILD_SOURCEVERSION: $(Build.SourceVersion)
+                    BUILD_REPOSITORY_ID: $(Build.Repository.ID)

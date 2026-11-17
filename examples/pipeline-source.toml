@@ -1,0 +1,21 @@
+# Reviewed source rules in the pinned WORKER repository, not a local .local file.
+# The pipeline adapter replaces only checkout/commit and worker-local artifact paths.
+source_root = "<AGENT_CONTENT_CHECKOUT>"
+# repo_id, repo_url and source_ref identify the CONTENT repository (the one holding the Markdown and
+# running this pipeline), not the worker repository that stores this file.
+repo_id = "<APPROVED_CONTENT_REPOSITORY_UUID>"
+source_ref = "refs/heads/main"
+commit = "<EXACT_PIPELINE_SOURCE_COMMIT>"
+repo_url = "https://dev.azure.com/<ORG>/<PROJECT>/_git/<CONTENT_REPOSITORY>"
+include = ["docs/**/*.md"]
+exclude = []
+contract = "../docs/index-contract.json"
+tokenizer_cache = "../.cache/tiktoken"
+target_tokens = 900
+max_content_chars = 3800
+max_input_tokens = 8000
+overlap_tokens = 0
+# Use the deployment/model/dimensions from the reviewed platform handoff.
+model = "text-embedding-3-large"
+deployment = "<APPROVED_EMBEDDING_DEPLOYMENT>"
+dimensions = 3072

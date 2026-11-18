@@ -1,8 +1,14 @@
 # This template is not live-operation approval. Fill only owner-approved inputs.
 search_endpoint = "https://<SEARCH_SERVICE>.search.windows.net"
 index_name = "<EXISTING_PHYSICAL_INDEX>"
-# Read-only schema REST version; use an owner-approved preview for preview schema properties.
+# Read-only schema REST version. It must be the version the schema file was exported with.
+# A schema without preview properties can use a stable version such as 2025-09-01. A schema that
+# declares the preview permission properties (permissionFilterOption, permissionFilter) needs its
+# preview version: 2025-05-01-preview for Agent Landing Zone schemas (handoff
+# publishing.search_schema_api_version). A stable version there fails with "Deployed schema differs".
 search_schema_api_version = "<PLATFORM_APPROVED_SEARCH_SCHEMA_API_VERSION>"
+# Must equal the schema vectorizer's resourceUri exactly, with no trailing slash. On the Agent Landing
+# Zone copy handoff publishing.embedding_endpoint, not an App Configuration model endpoint.
 embedding_endpoint = "https://<OPENAI_RESOURCE>.openai.azure.com"
 openai_api_version = "<APPROVED_DATE_BASED_API_VERSION>"
 state_account_url = "https://<STORAGE_ACCOUNT>.blob.core.windows.net"
@@ -13,10 +19,16 @@ schema_sha256 = "<INDEPENDENT_OWNER_SCHEMA_SHA256>"
 # In a pipeline, platform_schema may be a path inside the pinned worker repository
 # (for example config/<name>/...); a Secure File value overrides it when supplied.
 
-# Approval for the proof of concept: a NON-SERVING test index with synthetic content only. The waiver
-# records an owner decision (20+ characters, no placeholders) and makes no audience or access claim.
-# For a serving index or real content use an admission instead: see docs/operations.md section 4.
-admission_waiver = "POC"
+# Proof-of-concept approval: a recorded owner decision (20+ characters; < and > are rejected) that makes
+# no audience or access claim. Recommended target: a NON-SERVING test index with synthetic content, e.g.
+#   "Proof of concept: non-serving test index, synthetic content only"
+# A POC owner may also approve a SERVING POC index with it, only when ALL apply: synthetic or
+# common-audience content approved for everyone who can reach the app, no production users, no document
+# permissions claimed, and none of this source's documents in the index yet. Record it, e.g.
+#   "POC owner decision 2026-01-15: serving POC index, common-audience content only, no permissions claimed"
+# Never run rebuild against a serving POC index. Before real or restricted content or production users,
+# replace the waiver with an admission: see docs/deployment.md Step 5.6 and docs/operations.md section 4.
+admission_waiver = "<RECORDED_OWNER_DECISION: see docs/deployment.md Step 5.6>"
 
 auth_mode = "pipeline"
 tenant_id = "<TENANT_UUID>"

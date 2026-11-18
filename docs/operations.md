@@ -37,8 +37,9 @@ offline source setup.
 ## 2. External prerequisites
 
 For an Agent Landing Zone customer handoff, follow the delivered platform
-revision's customer runbook and exporter. The nonsecret export is a binding
-consistency check only: recheck private connectivity, actual roles, current
+revision's customer runbook and exporter, and map its values with
+[deployment Appendix A](deployment.md#appendix-a-agent-landing-zone-handoff-optional). The nonsecret
+export is a binding consistency check only: recheck private connectivity, actual roles, current
 serving bindings and source admission before publication. Keep the full schema
 and its independently approved hash together; do not regenerate an approval or
 silently replace the worker's pinned target to accommodate a failed check.
@@ -84,6 +85,17 @@ create the custom role definition in the Search resource group, and assign roles
 at the listed scopes. App/service-principal creation requires the appropriate
 directory permissions. A denied operation fails; the script never grants itself
 permissions, uses a secret fallback or automatically elevates the caller.
+
+Run it **after** the platform resources are provisioned: it reads the Search
+service, embedding account and state container and fails if one is missing. When
+a platform runbook already created the federated service connection with the
+manual (existing app registration) option, pass that application's client ID as
+`-ExistingAppId` instead of creating another app. If the platform's own
+post-provision step already granted Storage Blob Data Contributor on the state
+container to that identity, the script finds the exact assignment and reports it
+with `"created": false`; the duplicate is harmless. For Agent Landing Zone
+handoff values, see the parameter table in
+[deployment Step 3.2](deployment.md#step-3-create-the-service-connection-and-grant-roles).
 
 Prepare exact existing ARM resource IDs from each resource's Properties/JSON
 view. Do not supply only display names or infer a production subscription:
@@ -163,8 +175,11 @@ federated runtime access are not exercised by the tests; verify them in your ten
    [examples/publishing-config.toml](../examples/publishing-config.toml), with
    `auth_mode = "pipeline"`, explicit tenant/client/service connection UUIDs,
    existing canonical endpoints/index/container and the owner-supplied schema
-   hash. For preview permission properties select the matching
-   `search_schema_api_version`; this affects schema reads only.
+   hash. Set `search_schema_api_version` to the version the schema was exported
+   with: a schema with preview permission properties needs that preview version
+   (`2025-05-01-preview` for Agent Landing Zone schemas), because a stable read
+   omits them and the comparison fails. This affects schema reads only. Copy
+   `embedding_endpoint` so that it equals the schema vectorizer's `resourceUri`.
 4. Provide the approved full schema either as an Azure DevOps Secure File (set the
    template's `schemaSecureFile`) or as a reviewed copy in the worker repository
    (see "Platform schema as a pinned in-repo copy" below). Either is artifact
@@ -180,19 +195,24 @@ federated runtime access are not exercised by the tests; verify them in your ten
    Prevent unauthorized environment auto-creation. A YAML environment name or
    branch condition is not itself an authorization boundary.
 7. Configure the workload-identity-federated Azure Resource Manager service
-   connection. Do not select a secret-based connection. Do not grant resource
-   administration solely to make service-connection verification succeed. Creating
-   the connection with the automatic option also creates its own app registration and
-   federated credential; grant that identity (or the `New-IngestionIdentity.ps1` app, if
-   you use the manual option) only the four scoped roles above, and remove any
-   unrelated role the wizard or an earlier step assigned (for example a stray
-   Contributor on a resource group).
+   connection, or reuse the one a platform runbook already created with the
+   manual option (do not create a second one). Do not select a secret-based connection.
+   Do not grant resource administration solely to make service-connection verification
+   succeed. Creating the connection with the automatic option also creates its own app
+   registration and federated credential; grant that identity (or the
+   `New-IngestionIdentity.ps1` app, if you use the manual option) only the four scoped
+   roles above, and remove any unrelated role the wizard or an earlier step assigned
+   (for example a stray Contributor on a resource group).
 8. Production: pin a reviewed **full 40-character worker commit** in both the repository
    resource `ref` and template `workerCommit` in the
-   [content example](../examples/content-repo/azure-pipelines.yml). Azure Pipelines does not
+   [content example](../examples/content-repo/azure-pipelines.yml). The commit is one of the
+   worker repository hosted in your Azure DevOps project, which contains the reviewed
+   `config/<name>/`; the source revision you imported (for example a GitHub commit) is
+   provenance only and is not a valid pin. Azure Pipelines does not
    officially accept a bare SHA as a repository resource `ref`, so use an immutable tag
    for `ref` and keep the full SHA in `workerCommit`; the runtime check requires the
-   exact SHA. The POC may instead leave `workerCommit` empty (see "Unpinned worker").
+   exact SHA. The POC may instead leave `workerCommit` empty on a protected `main`
+   (see "Unpinned worker"); pin before real content.
    Replace all placeholders, including repository, connection, environment and secure-file
    names.
 9. Copy the thin root example to the content repository only with owner approval.
@@ -242,10 +262,11 @@ For each new approved corpus snapshot:
    to whatever HEAD happens to be.
 
 The example's `enablePublishing` defaults to **false**. First run the offline
-stage, then separately authorize a manual publishing run against a non-serving
-test target. Only after service checks/pipeline evidence pass may owners change
+stage, then separately authorize a manual publishing run against the waived or
+admitted target. Only after service checks/pipeline evidence pass may owners change
 the default to enable approved-branch CI and scheduled publication (the POC profile
-in section 7 does this for a non-serving test index only).
+in section 7 does this for a waived POC index: non-serving by default, or a serving
+POC index under the conditions below).
 
 The UTC `always: true` schedule is in the consuming root pipeline; when publishing
 is enabled, it selects `reconcile` even without new Git commits. It still needs
@@ -281,19 +302,37 @@ adopt this only after the owners confirm:
 
 ### POC admission waiver
 
-For a non-serving POC test index only, the platform owner may decide that a reviewed merge to
-the approved content ref is sufficient approval. Setting `admission_waiver = "<recorded
-decision>"` in the reviewed publishing config (and omitting `admission`/`admission_sha256`)
-replaces the admission file. The pinned worker config still binds the exact target
-(index, endpoints, container), and the source config still binds repo, ref and paths. The waiver
-implies: non-serving target, `allow_bootstrap`, `allow_selection_reset` (reconcile only), no
-bootstrap over existing documents and no history reset. It is rejected if combined with an
-admission or an external admission pin, or if it is a placeholder or under 20 characters.
+For a POC, the platform owner may decide that a reviewed merge to the approved content ref is
+sufficient approval. Setting `admission_waiver = "<recorded decision>"` in the reviewed publishing
+config (and omitting `admission`/`admission_sha256`) replaces the admission file. The pinned worker
+config still binds the exact target (index, endpoints, container), and the source config still binds
+repo, ref and paths. The waiver implies: `allow_bootstrap`, `allow_selection_reset` (reconcile only),
+no bootstrap over existing documents and no history reset. It is rejected if combined with an
+admission or an external admission pin, or if it contains `<` or `>` or is under 20 characters.
+
+**Target.** The recommended target is a **non-serving test index** with synthetic content. A POC owner
+may also use the waiver on a **serving POC index** (one a POC chat or application queries) as a
+recorded decision, only when **all** of these apply:
+
+- the content is synthetic, or common-audience content approved for every user who can reach the
+  application (in an anonymous access mode, everyone who can reach it, for example everyone on the VPN);
+- there are no production users;
+- no document permissions are claimed;
+- the index holds none of that source's documents yet: the waiver refuses bootstrap over existing
+  documents for the same repository and branch.
+
+Record the decision and its date in the waiver text, for example
+`"POC owner decision 2026-01-15: serving POC index, common-audience content only, no permissions claimed"`.
+The worker cannot check whether an index serves an application; the waiver text is the record.
+
+The worker treats every waived target as `non-serving` (the waiver carries that designation
+internally), so the core does not reject a `rebuild` against a waived serving POC index. Never select
+`rebuild` for it; use `sync` and `reconcile` only.
 
 This is **not** an audience or authorization claim. The external gates for document
-authorization and the audience mapping remain unmet and must be documented and satisfied
-before any serving index or non-synthetic content. Remove the waiver and use a version 1 or 2
-admission at that point.
+authorization and the audience mapping remain unmet. Remove the waiver and use a version 1 or 2
+admission **before any real or restricted content or any production users**, on any index, and
+before any serving index that does not meet every condition above.
 
 Source changes to the include/exclude rules are still blocked by the selection fingerprint.
 
@@ -386,25 +425,26 @@ Official references consulted for these templates:
 
 ## 7. Proof-of-concept deployment profile
 
-A POC against a non-serving test index can use a deliberately relaxed profile for
-synthetic content. It is **not** production approval. Everything below is non-secret;
+A POC can use a deliberately relaxed profile for synthetic or common-audience content: against a
+non-serving test index (recommended) or, as a recorded owner decision, a serving POC index under
+the conditions in section 4. It is **not** production approval. Everything below is non-secret;
 no key, token or secret belongs in the repository.
 
 | Item | Typical POC setting |
 | --- | --- |
 | Content | A test content repository, `refs/heads/main`, a dedicated folder such as `docs/**/*.md` (copy [examples/pipeline-source.toml](../examples/pipeline-source.toml)) |
-| Target | A non-serving index with Search/OpenAI/Storage in the platform resource groups (copy [examples/publishing-config.toml](../examples/publishing-config.toml)) |
-| Identity | A federated service connection; its (Azure DevOps-created) service principal holds Search Index Data Contributor on the index, OpenAI User on the account, Blob Data Contributor on the state container and a schema-reader role. Remove any unrelated Contributor role the wizard assigns |
-| Trigger | Pushes to `main` changing the test folder run `sync` automatically; manual runs may choose `sync` or `reconcile` (never `rebuild` for a serving target) |
+| Target | A non-serving index, or a serving POC index that meets every waiver condition in section 4, with Search/OpenAI/Storage in the platform resource groups (copy [examples/publishing-config.toml](../examples/publishing-config.toml)) |
+| Identity | A federated service connection, either created by the platform runbook (manual option) or by the wizard; its service principal holds Search Index Data Contributor on the index, OpenAI User on the account, Blob Data Contributor on the state container and a schema-reader role. Remove any unrelated Contributor role the wizard assigns |
+| Trigger | Pushes to `main` changing the test folder run `sync` automatically; manual runs may choose `sync` or `reconcile` (never `rebuild` for a serving target, which the waiver does not block) |
 | Approval | Recorded `admission_waiver` (no admission file, no variable group); audience/ACL are **not** claimed |
-| Schema | Byte-pinned in-repo copy, verified by `schema_sha256` and compared with the live index before writes |
-| Worker | Optionally unpinned: the worker repository `main` branch (`workerCommit` empty) |
-| Agent | Publishing on a self-hosted pool that can reach private endpoints, with `toolchain: local` when it has no package-index access; the offline Validate stage may use a hosted image |
+| Schema | Byte-pinned in-repo copy, verified by `schema_sha256` and compared with the live index before writes, read with the `search_schema_api_version` it was exported with |
+| Worker | Optionally unpinned: the hosted worker repository's protected `main` branch (`workerCommit` empty); pin before real content |
+| Agent | Publishing on a self-hosted agent that can reach the private endpoints: a VPN-connected machine for short runs, or a VM in the platform's agent subnet for sustained use (see below), with `toolchain: local` when it has no package-index access; the offline Validate stage may use a hosted image |
 
 Known constraints:
 
 - Private-only state storage and OpenAI accounts return 403 `AuthorizationFailure` to
-  Microsoft-hosted agents. Use an agent that can reach the private endpoints.
+  Microsoft-hosted agents, which never reach private endpoints. Use an agent that can.
 - A split-tunnel VPN leaves package-index traffic on the normal network; that is why the
   offline `toolchain: local` wheel-directory build exists.
 - To leave POC mode, restore a commit-pinned worker, an admission (scope or per-commit) with a
@@ -417,22 +457,41 @@ The template's `workerCommit` is optional. When empty, the pipeline uses whateve
 repository resource's `ref` checks out (for example `refs/heads/main`) and still verifies it is a
 valid Git checkout. This removes the commit/tag pin, so anyone able to push to the worker branch
 changes the code and the in-repo configuration that write to the index: protect that branch with
-required PR review. Set `workerCommit` to a full 40-character commit (and a tag `ref`) again for
-production; [the deployment guide](deployment.md#step-7-tag-and-pin-the-worker-release) shows how to tag a release and
-get that value.
+required PR review. Set `workerCommit` to a full 40-character commit (and a tag `ref`) again before
+real content and for production; [the deployment guide](deployment.md#step-7-tag-and-pin-the-worker-release)
+shows how to tag a release and get that value. The pin always names a commit of the worker repository
+hosted in your Azure DevOps project, after your `config/<name>/` is merged there, never the imported
+source commit.
 
 ### Self-hosted agent for private endpoints
 
 When the Search, OpenAI or state Blob endpoints are private-only, run the publishing job on a
-self-hosted agent that can reach them (for example a machine with the Azure VPN client connected;
-verify that the endpoints resolve to the private addresses and that port 443 connects). If that
-agent also cannot reach `files.pythonhosted.org`, set the template's `toolchain: local`. It builds
+self-hosted agent that can reach them. Microsoft-hosted agents never reach private endpoints.
+Two hosting options:
+
+- **A machine connected to the point-to-site VPN with private DNS.** Suitable for short POC runs,
+  and only while the machine stays connected: a dropped or sleeping connection fails the run. The
+  agent must run as a user with the VPN connected.
+- **A VM in the platform's agent subnet** (for the Agent Landing Zone, `devops-build-agents-subnet`
+  in the workload VNet). Recommended for sustained use: it resolves private endpoints through the
+  VNet's linked private DNS zones. The platform reserves the subnet but does not deploy an agent, and
+  the subnet has **no NAT gateway by default**. The network owner must provide approved outbound HTTPS
+  for it (Azure DevOps, Microsoft Entra ID and the package/tokenizer sources), for example by
+  associating an existing NAT gateway, or the agent must use `toolchain: local` for packages.
+
+`toolchain: local` covers Python packages only. The tokenizer asset is still downloaded from
+`openaipublic.blob.core.windows.net` on the first run unless the verified `cl100k_base.tiktoken` is
+already in the worker checkout's `.cache/tiktoken`, and Azure DevOps and Entra ID egress is always
+required. Verify that the endpoints resolve to the private addresses and that port 443 connects
+before the first publication.
+
+If the agent cannot reach `files.pythonhosted.org`, set the template's `toolchain: local`. It builds
 the locked environment from the wheel directory named by the agent's `INGEST_WHEEL_DIR`
 environment variable using `uv export`, `uv pip sync --no-index --require-hashes`, the pinned
 `hatchling` and a non-editable install, and runs every later `uv run` with `UV_NO_SYNC=1`. The agent
 needs Python 3.12 and `uv`. The hash-verified wheels must match `uv.lock`; refresh the directory
-when dependencies change. The agent must run as a user with the VPN connected and the `az` CLI
-installed, and the agent pool must be authorized for the pipeline. The default `toolchain:
+when dependencies change. The agent needs the `az` CLI installed (a VPN-hosted agent must also run as
+a user with the VPN connected), and the agent pool must be authorized for the pipeline. The default `toolchain:
 download` is unchanged for Microsoft-hosted agents.
 
 #### Build the wheel directory

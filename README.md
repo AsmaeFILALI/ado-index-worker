@@ -25,13 +25,13 @@ The full procedure, with commands and a "done when" check per step, is the
 container) come from your provisioning repository; the guide lists the values and requirements to collect from it.
 In short:
 
-1. **Decide** the profile: confirm a non-serving test index, network and package access.
+1. **Decide** the profile: the target (a non-serving test index by default, or a serving POC index under a recorded owner decision), network and package access.
 2. **Host** this worker repository in Azure DevOps, add its CI pipeline and protect `main`.
-3. **Create** the federated service connection, then run `scripts/New-IngestionIdentity.ps1` to grant the four roles.
+3. **Create** the federated service connection (or reuse one a platform runbook already created), then, after the platform is provisioned, run `scripts/New-IngestionIdentity.ps1` to grant the four roles.
 4. **Create** the protected environment, repository access and the agent pool.
 5. **Write** the reviewed `config/<name>/`: source rules, publishing target, pinned schema and the proof-of-concept waiver.
 6. **Rehearse** offline: `prepare-tokenizer`, then `plan` and `check` on a local clone of the content repository.
-7. **Tag** the worker release and pin it (optional for a proof of concept; the configuration must be merged first).
+7. **Tag** a commit of your hosted worker repository and pin it (optional for a proof of concept on a protected `main`; required before real content; the configuration must be merged first).
 8. **Add** the pipeline to the content repository with publishing still disabled; confirm the Validate stage is green.
 9. **Publish** once manually with `operation: sync` after sign-off.
 10. **Verify** the index and state, rerun to confirm no changes, then enable the trigger and nightly `reconcile`.
@@ -76,8 +76,10 @@ an arbitrary environment. Before remote execution, follow the
 [deployment guide](docs/deployment.md): host the worker repository, configure
 cross-repository access, create protected environment/service-connection resources,
 approve the test target with the proof-of-concept waiver and separately authorize the first
-non-serving pipeline test. The waiver makes no audience or access claim; a serving index or real
-content needs a reviewed admission instead (see [operations](docs/operations.md)).
+pipeline test. The waiver targets a non-serving test index by default; a serving POC index needs
+the recorded owner decision and conditions in [deployment Step 5.6](docs/deployment.md#56-approval).
+The waiver makes no audience or access claim; real or restricted content or production users
+need a reviewed admission instead (see [operations](docs/operations.md)).
 PR validation runs the original synthetic tests and the offline `check` job over the pull
 request's Markdown, without publishing resources or credentials.
 
@@ -300,15 +302,20 @@ Publishing requires all of:
   The worker reads the deployed index definition and checks both the consumer
   requirements and every pinned platform declaration. It never creates schemas.
 - `search_schema_api_version` selects the read-only index-definition REST version
-  (default `2025-09-01`). If the platform schema declares preview permission
-  properties, select its supported preview version, such as `2025-11-01-preview`.
-  A stable GET can omit those properties even when the index contains them.
+  (default `2025-09-01`). Set it to the version the platform schema was exported
+  with. A schema that declares the preview permission properties
+  (`permissionFilterOption`, `permissionFilter`) needs that preview version, for
+  example `2025-05-01-preview` for Agent Landing Zone schemas.
+  A stable GET can omit those properties even when the index contains them, and the
+  comparison then fails with "Deployed schema differs from the pinned platform definition".
   This setting never changes document-write APIs or relaxes schema comparison.
 - A reviewed, externally pinned source/target
   [admission artifact](examples/admission.template.json) (per-commit, `policy_version` 1),
   a [scope admission](examples/admission.scope.template.json) (`policy_version` 2: no
-  commit, never `rebuild`), or, for a non-serving POC only, a recorded `admission_waiver`
-  in the publishing config (see operations). The templates grant
+  commit, never `rebuild`), or, for a POC only, a recorded `admission_waiver`
+  in the publishing config (a non-serving test index by default, or a serving POC
+  index under the conditions in [deployment Step 5.6](docs/deployment.md#56-approval);
+  see operations). The templates grant
   nothing: placeholders, missing pins, mismatched source snapshots/selection or
   unresolved access policy fail before client construction.
 - The explicit `--authorize-publish` runtime option. This is operator intent,
@@ -346,7 +353,9 @@ reviewed divergent-history reset also needs `allow_history_reset`; missing/shall
 history remains a failure requiring operator action. Older ancestral queued
 targets are rejected even when a reset is permitted. `rebuild` additionally
 requires the target's reviewed `non-serving` designation; it never discovers,
-switches, or promotes a serving knowledge source. Incompatible index/model/
+switches, or promotes a serving knowledge source. A waiver carries that
+designation implicitly, so never run `rebuild` against a serving POC index
+approved by waiver. Incompatible index/model/
 processing fingerprints require an explicitly selected new pre-provisioned
 generation, not mixed publication into the old target.
 

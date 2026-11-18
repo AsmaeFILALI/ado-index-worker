@@ -44,9 +44,14 @@ resources:
   repositories:
     - repository: ingestionWorker
       type: git
+      # The worker repository hosted in YOUR Azure DevOps project (deployment guide Step 2), which holds
+      # your reviewed config/<name>/ (Step 5). Its commits are the ones you pin; the source revision you
+      # imported (for example from GitHub) is provenance only and is not a valid pin.
       name: <WORKER_PROJECT>/<WORKER_REPOSITORY>
-      # Use an immutable tag; Azure Pipelines does not officially accept a bare SHA here.
+      # Use an immutable tag on that repository; Azure Pipelines does not officially accept a bare SHA here.
       # workerCommit below must equal the tag's commit or the run fails closed.
+      # A proof of concept may instead track the protected main branch with workerCommit '' (Step 7);
+      # pin before real content.
       ref: refs/tags/<REVIEWED_IMMUTABLE_WORKER_TAG>
 
 stages:

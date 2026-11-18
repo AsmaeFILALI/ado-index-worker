@@ -14,7 +14,7 @@ provisions infrastructure, and the worker only publishes documents into it.
 | **`reconcile`** | A full repair: compares the whole index and its stored vectors with the repository. The nightly run |
 | **`rebuild`** | Publishes into a separate non-serving index generation. Manual only, and not used in this guide |
 | **Bootstrap** | The first publication of a repository and branch, when no checkpoint exists. The waiver allows it |
-| **Waiver** | A recorded owner decision for a non-serving proof-of-concept index. It makes no audience or access claim |
+| **Waiver** | A recorded owner decision that approves a proof-of-concept index without an admission record: a non-serving test index by default, or a serving POC index under the conditions in Step 5.6. It makes no audience or access claim |
 | **Quarantine** | A file that is skipped with a reported reason (for example invalid UTF-8) while other files proceed |
 
 ## Before you start
@@ -54,7 +54,10 @@ creates or changes them. Collect these values before you start; later steps use 
 | OpenAI endpoint and embedding deployment name | The source and publishing configs (Steps 5.3 and 5.4) |
 | Storage account URL and state container name | The publishing config (Step 5.4) |
 | Resource IDs of the Search service, the OpenAI account and the state container, plus the subscription ID and tenant ID | The identity script (Step 3) |
-| The exact index schema JSON used to create the index, and the REST API version used | The pinned schema (Step 5.5) and `search_schema_api_version` (Step 5.4) |
+| The exact index schema JSON used to create the index, and the REST API version it was exported with | The pinned schema (Step 5.5) and `search_schema_api_version` (Step 5.4) |
+
+On the Agent Landing Zone these values come from the platform's handoff file and App Configuration;
+[Appendix A](#appendix-a-agent-landing-zone-handoff-optional) maps each one.
 
 Confirm these requirements, because the worker refuses to publish when they are not met:
 
@@ -63,8 +66,8 @@ Confirm these requirements, because the worker refuses to publish when they are 
 - **Azure OpenAI** has a `text-embedding-3-large` deployment on the account's own
   `https://<name>.openai.azure.com` endpoint (token sign-in needs a custom subdomain). The index's query
   vectorizer uses the same model and deployment name as ingestion, and its `resourceUri` equals the
-  `embedding_endpoint` you will configure, or the worker stops with "Query/ingestion embedding resource
-  mismatch".
+  `embedding_endpoint` you will configure (same scheme and host, no path), or the worker stops with
+  "Query/ingestion embedding resource mismatch".
 - **Blob state** is a private container (public access off), shared by all publishers to the same index.
 - **The index** satisfies the [index contract](index-contract.json): the fields the worker writes, a cosine
   HNSW vector profile named `default` with a 3072-dimension `contentVector`, a semantic configuration named
@@ -72,8 +75,8 @@ Confirm these requirements, because the worker refuses to publish when they are 
   searchable, retrievable `category` field that the worker does not populate. The
   [minimal example schema](../examples/index-schema.minimal.example.json) shows the least that is needed.
   The larger [full example](../examples/index-schema.example.json) also declares preview-only permission
-  properties, so an index created from it needs a preview `search_schema_api_version` (the proof of concept
-  used `2025-11-01-preview`).
+  properties (`permissionFilterOption`, `permissionFilter`), so the worker must read the index with a preview
+  `search_schema_api_version`: the same version the schema was exported with (Step 5.4).
 
 ## The steps
 
@@ -93,14 +96,16 @@ Confirm these requirements, because the worker refuses to publish when they are 
 
 ## Step 1: Decide the deployment profile
 
-This guide sets up the **proof-of-concept profile**: a non-serving test index with synthetic content, approved
-by a recorded waiver. For a serving index or real content, see [Step 11](#step-11-move-to-production). Agree
-these three decisions first. They change what the later steps need.
+This guide sets up the **proof-of-concept profile**: synthetic or common-audience content, approved by a
+recorded waiver. The recommended target is a **non-serving test index**. A POC owner may instead point the waiver
+at a **serving POC index** (one that a POC chat or application queries) as a recorded decision, under the
+conditions in [Step 5.6](#56-approval). Before real or restricted content or production users, see
+[Step 11](#step-11-move-to-production). Agree these three decisions first. They change what the later steps need.
 
 | Decision | Options | Effect |
 | --- | --- | --- |
-| Purpose | Confirm that the target is a **non-serving test index** and the content is synthetic or approved for the test | The waiver makes no audience or access claim, so use it only for that. A proof of concept may also leave the worker unpinned |
-| Network | Public endpoints, or **private-only** Search, OpenAI and Storage | Private-only needs a self-hosted agent that can reach them (Step 4). Microsoft-hosted agents get 403 `AuthorizationFailure` |
+| Purpose | **Recommended:** a non-serving test index with synthetic content. **Allowed for a POC:** a serving POC index, only when every condition in Step 5.6 applies (common-audience content approved for everyone who can reach the application, no production users, no document permissions claimed, no existing documents from this source in the index) | The waiver makes no audience or access claim, so record the decision in its text. A proof of concept may also leave the worker unpinned |
+| Network | Public endpoints, or **private-only** Search, OpenAI and Storage | Private-only needs a self-hosted agent that can reach them (Step 4.3): a VPN-connected machine for short POC runs, or a VM in the platform's agent subnet for sustained use. Microsoft-hosted agents get 403 `AuthorizationFailure` |
 | Package access | The agent can reach the package index, or cannot | If it cannot, use `toolchain: local` with an offline wheel directory (Step 4) |
 
 **Done when:** the three decisions are written down and the owners (platform, content, pipeline) agree.
@@ -120,6 +125,11 @@ If you are on the Agent Landing Zone, also read [Appendix A](#appendix-a-agent-l
    git remote add origin https://dev.azure.com/<ORG>/<PROJECT>/_git/<WORKER_REPOSITORY>
    git push -u origin main
    ```
+
+   This repository in **your** Azure DevOps project is the worker the pipelines run. Record the source
+   revision you imported (for example the GitHub commit and package version) as provenance only. Step 5 adds
+   `config/<name>/` here, which creates new commits, so any pin in Step 7 names a commit of this repository,
+   never the imported source commit.
 2. **Create the worker CI pipeline.** Pipelines, New pipeline, Azure Repos Git, your worker repository,
    Existing Azure Pipelines YAML file, `/pipelines/ci.yml`. It runs the lint, type and offline test
    checks on `windows-latest` and `ubuntu-latest` Microsoft-hosted images. If your organization has no
@@ -134,6 +144,15 @@ If you are on the Agent Landing Zone, also read [Appendix A](#appendix-a-agent-l
 
 **Who:** an Azure DevOps project administrator for the connection, and someone who can assign Azure
 roles for the script. Do these in order, because the publishing configuration needs the IDs they produce.
+
+**If the service connection already exists, skip 3.1.** Some platform runbooks create the
+workload-identity-federated connection themselves, with the manual (existing app registration) option, before
+provisioning, because the platform grants the state container role to that identity. In that case do not create a
+second connection: record its three IDs as described in 3.1, then continue with 3.2 and 3.3 using
+`-ExistingAppId <client-id>`. Such a connection has no broad role from the wizard, so 3.4 is a check only.
+
+**Run 3.2 after the platform is provisioned.** The script checks that the Search service, the OpenAI account and
+the state container already exist, then assigns roles on them and on the index; it stops if a resource is missing.
 
 1. **Create the service connection.** In the project that runs the content pipeline, create a
    **workload-identity-federated Azure Resource Manager service connection**. Do not choose a
@@ -165,6 +184,35 @@ roles for the script. Do these in order, because the publishing configuration ne
    stops with an error otherwise. It needs PowerShell 7, the Azure CLI and an existing `az` login in
    the right tenant and subscription. Details: [operations](operations.md#admin-owned-identity-setup-script).
 
+   **Permissions to run it.** Creating the custom schema-reader role needs role-definition rights
+   (`Microsoft.Authorization/roleDefinitions/write`) on the **Search resource group**, and each assignment needs
+   role-assignment rights at its scope. An Entra administrator role alone does not grant either.
+
+   **If the platform already granted the container role,** for example in its post-provision step, the script finds
+   that exact assignment and reports it with `"created": false`. The duplicate request is harmless; nothing is
+   changed or removed.
+
+   **Agent Landing Zone values.** With the platform handoff file (`.local/ingestion-handoff.json`), fill `$setup`
+   like this:
+
+   | Script parameter | Take it from |
+   | --- | --- |
+   | `TenantId`, `SubscriptionId` | `tenant_id` and `subscription_id` in the handoff |
+   | `SearchServiceResourceId` | App Configuration key `SEARCH_SERVICE_RESOURCE_ID` (label `agent-lz`). It is not in the handoff |
+   | `IndexName` | `publishing.index_name` |
+   | `OpenAIResourceId` | `resources.openai_resource_id` |
+   | `StateContainerResourceId` | `resources.state_container_resource_id` |
+   | `ExistingAppId` | The service connection's application (client) ID |
+
+   ```powershell
+   az appconfig kv show --endpoint <APP_CONFIG_ENDPOINT> --key SEARCH_SERVICE_RESOURCE_ID --label agent-lz `
+       --auth-mode login --query value -o tsv
+   ```
+
+   The handoff's `resources.state_writer_principal_id` is the **service-principal object ID** the platform granted
+   the container role to. It must equal `az ad sp show --id <client-id> --query id -o tsv` for this connection;
+   if it does not, state writes fail with 403 even though the script succeeded.
+
    **If it stops with "The existing schema-reader role differs from the exact read-only definition".** The
    custom role name (default `ADO Markdown Index Schema Reader`) is unique per subscription, but the role can
    only be assigned inside the one resource group it was created for. A second environment in another resource
@@ -186,7 +234,8 @@ roles for the script. Do these in order, because the publishing configuration ne
    `Storage Blob Data Contributor` and your schema-reader role. The service connection wizard alone does **not**
    grant the first, second and fourth: a pipeline that has only the wizard's roles fails on the first Search call
    with `schema-read failed permanently (status 403)`.
-4. **Review the broad role** the connection wizard assigned (often Contributor). The worker needs only
+4. **Review the broad role** the connection wizard assigned (often Contributor). A connection created with the
+   manual option, for example by the platform runbook, usually has none; check the list from 3.3. The worker needs only
    the four roles above. Remove the broad one only after you have run the Step 9 publication
    successfully, because whether the pipeline can still sign in without any subscription-level role
    depends on your tenant; if it cannot, grant Reader on the resource group instead (see Troubleshooting).
@@ -204,7 +253,22 @@ portal. Role assignments can take several minutes to propagate.
    repository and the worker repository.
 3. **Agent pool.** Authorize a pool for the pipeline. Use a **self-hosted** pool if Search, OpenAI or
    Storage are private-only: the agent must resolve their private addresses and reach them on port 443.
-   It needs Python 3.12 and `uv` (for `toolchain: local`), `git`, PowerShell 7 and the `az` CLI.
+   Microsoft-hosted agents never reach private endpoints. It needs Python 3.12 and `uv` (for
+   `toolchain: local`), `git`, PowerShell 7 and the `az` CLI. Two ways to host it:
+
+   | Option | Use it for | What to know |
+   | --- | --- | --- |
+   | A machine connected to the platform's **point-to-site VPN** with its private DNS settings | Short POC runs | Works only while that machine stays connected and resolves the private names; a disconnected or sleeping machine fails the run. The agent must run as a user that has the VPN connection |
+   | A **VM in the platform's agent subnet** (for the Agent Landing Zone, `devops-build-agents-subnet` in the workload VNet) | Sustained use | Resolves private endpoints through the VNet's linked private DNS zones. The platform reserves the subnet but does not deploy an agent |
+
+   **Outbound access.** Either way the agent needs approved outbound HTTPS to Azure DevOps and Microsoft Entra ID,
+   and to its package and tokenizer sources. The Agent Landing Zone's agent subnet has **no NAT gateway by
+   default**, so the network owner must provide approved egress for it (for example by associating an existing NAT
+   gateway) before you install the agent. `toolchain: local` (item 4) removes the package-index dependency only:
+   the first run still downloads the pinned tokenizer from `openaipublic.blob.core.windows.net` unless the
+   verified `cl100k_base.tiktoken` is already in the worker checkout's `.cache/tiktoken` on the agent.
+   Before the first publication, verify name resolution to private addresses and port 443 to the Search, OpenAI
+   and Blob endpoints from the agent.
 4. **Offline toolchain (only if the agent cannot reach the package index).** Build the wheel
    directory and set `INGEST_WHEEL_DIR` for the agent's user, as described in
    [operations](operations.md#build-the-wheel-directory), then use `toolchain: local` in Step 8.
@@ -306,21 +370,25 @@ Open `config/<name>/publishing-config.toml`. Change these lines:
 | --- | --- | --- |
 | `search_endpoint` | `https://<search-service>.search.windows.net` | The provisioning repository |
 | `index_name` | The existing index name | The provisioning repository |
-| `search_schema_api_version` | The REST API version used to create the index. `2025-09-01` is the stable default; a schema with preview-only properties, such as the full example schema, needs a preview version such as `2025-11-01-preview` | The provisioning repository |
-| `embedding_endpoint` | `https://<openai-account>.openai.azure.com` | The provisioning repository. It must equal the vectorizer's `resourceUri` in the schema |
+| `search_schema_api_version` | The **same** Search REST API version the schema file was exported with. A schema without preview properties, such as the minimal example, can use the stable `2025-09-01`. A schema that declares the preview permission properties `permissionFilterOption` or `permissionFilter` needs the preview version it was exported with: for Agent Landing Zone schemas that is `2025-05-01-preview`, from the handoff. A stable version omits those properties when it reads the index, so the run fails with "Deployed schema differs from the pinned platform definition" | The provisioning repository (handoff `publishing.search_schema_api_version`) |
+| `embedding_endpoint` | `https://<openai-account>.openai.azure.com`, with **no trailing slash** | The provisioning repository (handoff `publishing.embedding_endpoint`). It must equal the vectorizer's `resourceUri` in the schema exactly. Do not copy an endpoint from another source such as an App Configuration model list |
 | `openai_api_version` | Any date-based version your deployment supports, for example `2025-01-01-preview` | The proof of concept used that one |
 | `state_account_url` | `https://<storage-account>.blob.core.windows.net` | The provisioning repository |
 | `state_container` | The private container name | The provisioning repository |
 | `platform_schema` | The path to the schema file **from the worker repository root**, for example `config/<name>/<index>.schema.json` | The file you add in 5.5. (A local rehearsal resolves it from this file's folder instead) |
 | `schema_sha256` | The 64-character SHA-256 of that schema file | Computed in 5.5 |
-| `admission_waiver` | A recorded decision sentence of 20+ characters, for example `"Proof of concept: non-serving test index, synthetic content only"` | The owner of the test index. See 5.6 |
+| `admission_waiver` | A recorded decision sentence of 20+ characters, for example `"Proof of concept: non-serving test index, synthetic content only"`. For a serving POC index, use the wording in 5.6 | The owner of the target index. See 5.6 |
 | `tenant_id`, `client_id`, `service_connection_id` | The three IDs you recorded | Step 3 |
+
+On the Agent Landing Zone, copy the `publishing` values from the handoff file unchanged; see
+[Appendix A](#appendix-a-agent-landing-zone-handoff-optional).
 
 **Leave** `auth_mode = "pipeline"`, `inventory_limit` and `visibility_seconds`. Content repositories that
 publish to the same index can share this file (see
 [several content repositories](#indexing-several-content-repositories)).
 
-A finished file, with fictional values and the proof-of-concept waiver:
+A finished file, with fictional values and the proof-of-concept waiver for a non-serving test index. Its
+fictional schema has no preview properties, so it uses the stable `search_schema_api_version`:
 
 ```toml
 # Example (fictional values): config/contoso/publishing-config.toml
@@ -363,27 +431,50 @@ afterwards without updating the file and its hash.
 ### 5.6 Approval
 
 For the proof of concept, the approval is a **waiver**: one line, `admission_waiver`, in
-`publishing-config.toml`. It records a decision by the owner of the test index. Write a sentence of 20 or more
-characters that says what was decided and why, for example:
+`publishing-config.toml`. It records a decision by the owner of the target index. Write a sentence of 20 or more
+characters that says what was decided and why. The worker rejects text that contains `<` or `>`, so replace
+every placeholder in the examples below with real words.
+
+**Recommended: a non-serving test index.** No application queries the index, and the content is synthetic:
 
 ```toml
 admission_waiver = "Proof of concept: non-serving test index, synthetic content only"
 ```
 
+**Allowed for a POC: a serving POC index.** A POC owner may use the waiver on an index that a POC chat or
+application already queries, as a recorded decision, only when **all** of these apply:
+
+- the content is synthetic, or common-audience content approved for **every** user who can reach the application
+  (in an anonymous access mode, that is everyone who can reach it, for example everyone on the VPN);
+- there are **no production users**;
+- **no document permissions are claimed**: the application must not present results as access-controlled;
+- the index holds **none of this source's documents yet**. The waiver refuses a first publication over existing
+  documents for the same repository and branch, so publish each source into an index that has none of them.
+
+Record the decision and its date in the text, for example:
+
+```toml
+admission_waiver = "POC owner decision 2026-01-15: serving POC index, common-audience content only, no permissions claimed"
+```
+
+Never run `rebuild` against a serving POC index. The worker treats a waived target as non-serving, so it
+does not stop a `rebuild` there; use `sync` and `reconcile` only.
+
 Nothing else is needed: no admission file, no hash, no secure file and no variable group. Understand what the
 waiver means before you use it:
 
-- It states that the target is a **non-serving** index. The worker records this but cannot check it, so make
-  sure no application queries this index.
-- It makes **no audience or access claim**. Anyone who can query the index can read what you publish, so use
-  synthetic or already-approved content only.
+- The worker **cannot check** whether an application queries the index. Whether the target is non-serving, or a
+  serving POC index that meets the conditions above, is the owner's recorded statement.
+- It makes **no audience or access claim**. Anyone who can query the index, directly or through the
+  application, can read what you publish, so use synthetic or already-approved common-audience content only.
 - It allows the first publication of a new repository and branch (bootstrap), and lets a `reconcile` run
   adopt a changed file selection. It does not allow publishing over documents that already exist in the index
   for that scope, and it does not allow resetting the recorded history.
 - The placeholder text in the template is rejected, so the waiver cannot be left unfilled by accident.
 
-For a serving index or real content, use an admission, a reviewed approval record bound to the repository, branch,
-file selection, target and approved audience. That is outside this guide: see
+**Replace the waiver with an admission** before any real or restricted content or any production users, on a
+serving or non-serving index. An admission is a reviewed approval record bound to the repository, branch, file
+selection, target and approved audience. That is outside this guide: see
 [operations section 4](operations.md#4-approval-models-per-commit-admission-default-scope-admission-poc-waiver)
 and [Step 11](#step-11-move-to-production).
 
@@ -431,8 +522,14 @@ index only shows up at the first publication.
 
 ## Step 7: Tag and pin the worker release
 
-**Who:** pipeline owners. Production only: a proof of concept may skip this step and track a branch (see
-[operations](operations.md#unpinned-worker-poc)).
+**Who:** pipeline owners. A proof of concept may skip this step and track the protected `main` branch unpinned
+(see [operations](operations.md#unpinned-worker-poc)); pin before any real content.
+
+**What the pin refers to.** The pipeline checks out the worker repository you hosted in your Azure DevOps project
+in Step 2, and Step 5 committed `config/<name>/` there. So the tag and `workerCommit` name a commit of **that**
+repository, the one that contains your reviewed configuration. The source commit you imported (for example from
+GitHub) is provenance only: it has no `config/<name>/`, with Step 2's fresh `git init` it is not even in your
+repository's history, and using it as `workerCommit` fails the pin check.
 
 The configuration lives in the worker repository, so tag **after** Step 5 is merged:
 
@@ -520,8 +617,8 @@ content repository as `azure-pipelines.yml`, then set these values:
 | `parameters.sourceConfig` default | `config/<name>/pipeline-source.toml` | The folder you created in Step 5 |
 | `parameters.publishingConfig` default | `config/<name>/publishing-config.toml`, or the shared file | Step 5.4 |
 | `resources.repositories[].name` | `<WORKER_PROJECT>/<WORKER_REPOSITORY>`, for example `Knowledge/ado-markdown-ingestion` | Where you hosted the worker (Step 2) |
-| `resources.repositories[].ref` | Proof of concept: `refs/heads/main`. Production: `refs/tags/<tag>` | Step 7 |
-| `workerCommit` (both stages) | Proof of concept: leave it out or `''`. Production: the 40-character commit | Step 7 |
+| `resources.repositories[].ref` | Proof of concept: `refs/heads/main` of your hosted worker repository, protected by required review. Before real content: `refs/tags/<tag>` | Step 7 |
+| `workerCommit` (both stages) | Proof of concept: leave it out or `''`. Before real content: the 40-character commit of your hosted worker repository that the tag points to, not the imported source commit | Step 7 |
 | `approvedRef` (both stages) | The full branch ref that is indexed, normally `refs/heads/main` | Must equal `source_ref` in `pipeline-source.toml` |
 | `environment` | The pre-created environment name | Step 4.1 |
 | `serviceConnection` | The **name** of the service connection | Step 3.1 |
@@ -728,7 +825,8 @@ hand; see the [recovery runbook](operations.md#5-failure-and-recovery-runbook).
 
 A proof of concept uses the relaxed profile in
 [operations section 7](operations.md#7-proof-of-concept-deployment-profile): an approval waiver and, optionally,
-an unpinned worker. Before real content or a serving index:
+an unpinned worker. Before real or restricted content, production users, or a serving index that does not meet
+every condition in [Step 5.6](#56-approval):
 
 - pin the worker to a tag and full commit (Step 7),
 - replace the waiver with an admission, a reviewed approval record that names the approved audience, following
@@ -797,31 +895,43 @@ See the [recovery runbook](operations.md#5-failure-and-recovery-runbook). Common
 | Publish stage fails on a secure file or variable group | `schemaSecureFile`, `admissionSecureFile` or a variable group were added with names that do not exist: remove them (Step 8.3) |
 | "Cannot read reviewed publishing configuration" | `publishing-config.toml` is not valid TOML (for example doubled quotes) or the path in `publishingConfig` does not exist at the worker ref the pipeline checked out |
 | "Federated task identity does not match the reviewed publishing identity" | `tenant_id`, `client_id` or `service_connection_id` in the publishing config differs from the connection named in `serviceConnection`, or `serviceConnectionId` in the YAML belongs to a different connection. Look them up as shown in Step 8.2 |
-| "Deployed schema differs from the pinned platform definition" | The schema file differs from the live index, or `search_schema_api_version` does not return the properties the file declares (preview-only properties need a preview version) |
-| "Query/ingestion embedding resource mismatch" | The vectorizer's `resourceUri` in the schema differs from `embedding_endpoint` |
+| "Deployed schema differs from the pinned platform definition" | The schema file differs from the live index, or `search_schema_api_version` is not the version the schema was exported with. A schema with preview permission properties read with a stable version (for example `2025-09-01`) loses them; Agent Landing Zone schemas need `2025-05-01-preview` from the handoff (Step 5.4) |
+| "Query/ingestion embedding resource mismatch" | `embedding_endpoint` differs from the vectorizer's `resourceUri` in the schema. Copy it from the handoff's `publishing.embedding_endpoint`, not from another source (Step 5.4) |
 | "publisher-acquire retry budget exhausted" | Another run, often another repository's pipeline, holds the index lease. Rerun after it finishes, and see [several content repositories](#indexing-several-content-repositories) |
-| "Bootstrap found existing source documents; explicit admission is required" | The index already holds documents for this repository and branch (for example from an earlier test). The waiver does not allow publishing over them. Use a fresh index for the test, or ask the platform team how to handle the existing documents; do not delete them by hand |
+| "Bootstrap found existing source documents; explicit admission is required" | The index already holds documents for this repository and branch (for example from an earlier test). The waiver does not allow publishing over them. Use an index without this source's documents (Step 5.6), or ask the platform team how to handle the existing documents; do not delete them by hand |
 | 401 or 403 from Search | RBAC is not enabled for the Search data plane, or the role assignments have not propagated yet |
 | "schema-read failed permanently (status 403)" | The service principal lacks the Search roles. List its roles as in Step 3.3 and run the identity script if they are missing. If they are present, wait a few minutes for propagation. If Search has public access disabled, the agent must reach its private endpoint (Step 4.3) |
 | "The existing schema-reader role differs from the exact read-only definition" (identity script) | The default role name already exists for another resource group. Pass a distinct `SchemaReaderRoleName` (Step 3.2) |
-| 403 `AuthorizationFailure` from Blob or OpenAI | A private-only account reached from a Microsoft-hosted agent |
+| 403 `AuthorizationFailure` from Blob or OpenAI | A private-only account reached from a Microsoft-hosted agent, or from a VPN agent whose connection dropped (Step 4.3) |
 | The sign-in step fails with "No subscriptions found" | Possible when the principal has only resource-scoped roles. Grant Reader on the resource group that holds the resources, then retry. This is untested in the proof of concept, so report what you find |
 | Tokenizer unavailable | Run `ado-ingest prepare-tokenizer` first, or place `cl100k_base.tiktoken` in the cache directory |
 
 ## Appendix A: Agent Landing Zone handoff (optional)
 
 Only for customers on the Agent Landing Zone. For a compatible customer revision, the platform's
-`python -m config.deployment.ingestion_handoff` command exports an allowlisted JSON artifact from
-explicit successful deployment snapshots and the owner-pinned full index schema. It does not provision
-resources, grant access or authorize publication. Its `publishing` fields map to this worker's
-publishing TOML; its `embedding` fields supply the deployment, model and dimensions.
+`python -m config.deployment.ingestion_handoff` command exports an allowlisted JSON artifact
+(`.local/ingestion-handoff.json`) from explicit successful deployment snapshots and the owner-pinned full index
+schema. It does not provision resources, grant access or authorize publication. Follow the delivered platform
+revision's customer runbook to produce it, then map its values:
 
-Review the artifact, copy the exact customer schema bytes, and set `platform_schema` to their approved
-path. Do not copy the JSON wholesale into TOML or treat `publication_authorized=false` as admission.
-Tenant, client, service-connection identity and approval inputs remain owner work. Match
-`search_schema_api_version` to the actual platform schema: the worker's stable default is not evidence
-that a preview platform field is supported. The embedding inference API version, the model revision and
-the Search schema API version are distinct. Never reuse another environment's schema hash, endpoints or
-roles. The platform's declared serving status is an owner assertion, not a live guarantee: verify the
-current source, base and application references before using a non-serving waiver. A `test` substring in
-a name grants no safety. Follow the delivered platform revision's customer runbook for everything else.
+| Worker value | Take it from | Note |
+| --- | --- | --- |
+| `search_endpoint`, `index_name`, `openai_api_version`, `state_account_url`, `state_container`, `schema_sha256` (Step 5.4) | `publishing.*` in the handoff | Copy exactly |
+| `search_schema_api_version` (Step 5.4) | `publishing.search_schema_api_version`: `2025-05-01-preview` | Not the stable `2025-09-01`. Platform schemas declare the preview permission properties `permissionFilterOption` and `permissionFilter`; a stable version fails with "Deployed schema differs from the pinned platform definition" |
+| `embedding_endpoint` (Step 5.4) | `publishing.embedding_endpoint` | Copy exactly, with no trailing slash; it equals the schema vectorizer's `resourceUri`. Do **not** take it from the App Configuration `MODEL_DEPLOYMENTS` setting, whose endpoint has a trailing slash |
+| `deployment`, `model`, `dimensions` (Step 5.3) | `embedding.*` in the handoff | |
+| Schema file `config/<name>/<index>.schema.json` (Step 5.5) | The schema file the platform exported | Copy the bytes unchanged (LF); the hash must equal `publishing.schema_sha256` |
+| Identity script parameters (Step 3.2) | `tenant_id`, `subscription_id`, `resources.openai_resource_id`, `resources.state_container_resource_id`, plus App Configuration `SEARCH_SERVICE_RESOURCE_ID` (label `agent-lz`) | See the table in Step 3.2. The Search service resource ID is not in the handoff |
+| State writer check (Step 3.2) | `resources.state_writer_principal_id` | Must be the service-principal object ID of your service connection's application |
+| `tenant_id`, `client_id`, `service_connection_id` | The service connection (Step 3) | Not in the handoff |
+| `admission_waiver` | The owner's recorded decision (Step 5.6) | Not in the handoff |
+
+Do not copy the JSON wholesale into TOML or treat `publication_authorized=false` as admission. The embedding
+inference API version (`openai_api_version`), the model revision and the Search schema API version are distinct.
+Never reuse another environment's schema hash, endpoints or roles.
+
+The handoff's serving status is an owner assertion, not a live guarantee: verify the current source, base and
+application references. When the platform marks the index as **serving** because a POC chat queries it, the waiver
+is allowed only under the conditions in [Step 5.6](#56-approval), recorded in its text; otherwise use an admission.
+A `test` substring in a name grants no safety. Follow the delivered platform revision's customer runbook for
+everything else, including where the publishing agent runs (Step 4.3).
